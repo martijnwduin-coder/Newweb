@@ -25,7 +25,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 pb-16 pt-6 sm:px-8 lg:pt-12">
-      <h1 className="display text-[36px] text-forest">Notifications</h1>
+      <h1 className="display text-[36px] text-ink">Notifications</h1>
       <div className="mt-8 space-y-2">
         {items.length ? items.map((n) => <Row key={n.id} n={n} />) : <EmptyState icon={Bell} title="All caught up" body="Friend requests and recommendations will show up here." />}
       </div>
@@ -85,7 +85,7 @@ function Row({ n }: { n: AppNotification }) {
     <div className={cn("flex gap-3 rounded-2xl p-4 transition", n.isRead ? "bg-white/50" : "bg-white shadow-soft")}>
       <Link href={`/u/${actor.username}`} className="relative shrink-0">
         <Avatar user={actor} />
-        <span className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-forest text-cream ring-2 ring-white">
+        <span className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-ink text-paper ring-2 ring-white">
           <Icon className="h-3 w-3" />
         </span>
       </Link>
@@ -96,7 +96,7 @@ function Row({ n }: { n: AppNotification }) {
         {extra}
         <p className="mt-1 text-[12px] text-muted">{timeAgo(n.createdAt)}</p>
       </div>
-      {!n.isRead && <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-terracotta" aria-label="Unread" />}
+      {!n.isRead && <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent" aria-label="Unread" />}
     </div>
   );
 }

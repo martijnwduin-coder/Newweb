@@ -45,9 +45,9 @@ export default function FriendsPage() {
   }, [db, meId, friends, incoming, outgoing]);
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-6 sm:px-8 lg:pt-10">
+    <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-6 sm:px-8 lg:pt-10">
       <header className="animate-fade-up">
-        <h1 className="display text-[38px] text-forest sm:text-[48px]">Your table</h1>
+        <h1 className="display text-[38px] text-ink sm:text-[48px]">Your table</h1>
         <p className="mt-2 max-w-xl text-[15px] text-muted">Where your friends are eating, drinking and saving. Recommendations from people, not algorithms.</p>
       </header>
 
@@ -87,7 +87,7 @@ export default function FriendsPage() {
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search people by name or @username"
                 aria-label="Search people"
-                className="h-12 w-full rounded-full border border-cream-300 bg-white pl-11 pr-4 text-[14.5px] shadow-soft focus:border-sage focus:outline-none focus:ring-4 focus:ring-sage/25"
+                className="h-12 w-full rounded-full border border-paper-300 bg-white pl-11 pr-4 text-[14.5px] shadow-soft focus:border-stone focus:outline-none focus:ring-4 focus:ring-stone/25"
               />
             </div>
             {q && (

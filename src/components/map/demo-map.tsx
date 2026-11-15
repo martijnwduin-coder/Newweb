@@ -67,7 +67,7 @@ export function DemoMap({ markers, center, selectedId, hoverId, onSelect }: { ma
   return (
     <div
       ref={ref}
-      className="relative h-full w-full touch-none select-none overflow-hidden bg-[#EAE6DB]"
+      className="relative h-full w-full touch-none select-none overflow-hidden bg-[#E6E3DC]"
       onPointerDown={(e) => {
         drag.current = { x: e.clientX, y: e.clientY, moved: false };
         (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
@@ -92,16 +92,16 @@ export function DemoMap({ markers, center, selectedId, hoverId, onSelect }: { ma
       <svg className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden>
         <defs>
           <pattern id="streets" width={64 * view.zoom} height={64 * view.zoom} patternUnits="userSpaceOnUse" x={view.x % (64 * view.zoom)} y={view.y % (64 * view.zoom)}>
-            <path d={`M0 ${32 * view.zoom}H${64 * view.zoom}M${32 * view.zoom} 0V${64 * view.zoom}`} stroke="#F7F5EF" strokeWidth={Math.max(2, 5 * view.zoom)} />
+            <path d={`M0 ${32 * view.zoom}H${64 * view.zoom}M${32 * view.zoom} 0V${64 * view.zoom}`} stroke="#F2F0EB" strokeWidth={Math.max(2, 5 * view.zoom)} />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#streets)" />
         <g transform={`translate(${size.w / 2 + view.x} ${size.h / 2 + view.y}) scale(${view.zoom})`}>
-          <path d="M-900 120 C -500 40, -250 220, 0 140 S 500 -40, 900 60 L 900 200 C 500 120, 250 300, 0 260 S -500 160, -900 260 Z" fill="#C9D6D3" opacity="0.9" />
-          <ellipse cx="-220" cy="-160" rx="130" ry="80" fill="#CBD6C4" />
-          <ellipse cx="260" cy="-60" rx="90" ry="120" fill="#CBD6C4" />
-          <path d="M-900 -260 L 900 -180" stroke="#F7F5EF" strokeWidth="14" />
-          <path d="M-120 -600 L 80 600" stroke="#F7F5EF" strokeWidth="12" />
+          <path d="M-900 120 C -500 40, -250 220, 0 140 S 500 -40, 900 60 L 900 200 C 500 120, 250 300, 0 260 S -500 160, -900 260 Z" fill="#CFD3D2" opacity="0.9" />
+          <ellipse cx="-220" cy="-160" rx="130" ry="80" fill="#D8D9CF" />
+          <ellipse cx="260" cy="-60" rx="90" ry="120" fill="#D8D9CF" />
+          <path d="M-900 -260 L 900 -180" stroke="#F2F0EB" strokeWidth="14" />
+          <path d="M-120 -600 L 80 600" stroke="#F2F0EB" strokeWidth="12" />
         </g>
       </svg>
 
@@ -124,10 +124,10 @@ export function DemoMap({ markers, center, selectedId, hoverId, onSelect }: { ma
       })}
 
       <div className="absolute bottom-4 right-4 hidden flex-col overflow-hidden rounded-xl bg-white shadow-lift sm:flex">
-        <button className="grid h-10 w-10 place-items-center hover:bg-cream-200" onClick={() => zoomBy(1.4)} aria-label="Zoom in">
+        <button className="grid h-10 w-10 place-items-center hover:bg-paper-200" onClick={() => zoomBy(1.4)} aria-label="Zoom in">
           <Plus className="h-4 w-4" />
         </button>
-        <button className="grid h-10 w-10 place-items-center border-t border-cream-200 hover:bg-cream-200" onClick={() => zoomBy(1 / 1.4)} aria-label="Zoom out">
+        <button className="grid h-10 w-10 place-items-center border-t border-paper-200 hover:bg-paper-200" onClick={() => zoomBy(1 / 1.4)} aria-label="Zoom out">
           <Minus className="h-4 w-4" />
         </button>
       </div>

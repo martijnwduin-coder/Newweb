@@ -43,11 +43,11 @@ export function priceLabel(level?: number | null) {
 }
 
 export const CATEGORY_META: Record<Category, { label: string; plural: string; color: string }> = {
-  restaurant: { label: "Restaurant", plural: "Restaurants", color: "#183D32" },
-  coffee: { label: "Coffee", plural: "Coffee", color: "#8A5A3C" },
-  cafe: { label: "Café", plural: "Cafés", color: "#6F8466" },
-  bakery: { label: "Bakery", plural: "Bakeries", color: "#C77C5C" },
-  bar: { label: "Bar", plural: "Bars", color: "#3D3552" },
+  restaurant: { label: "Restaurant", plural: "Restaurants", color: "#0F0F0E" },
+  coffee: { label: "Coffee", plural: "Coffee", color: "#7A4A2E" },
+  cafe: { label: "Café", plural: "Cafés", color: "#5E6B57" },
+  bakery: { label: "Bakery", plural: "Bakeries", color: "#FF5C28" },
+  bar: { label: "Bar", plural: "Bars", color: "#3A3550" },
 };
 
 export const CATEGORIES = Object.keys(CATEGORY_META) as Category[];
@@ -69,7 +69,7 @@ export function initials(name: string) {
     .join("");
 }
 
-const AVATAR_TONES = ["#183D32", "#C77C5C", "#6F8466", "#8A5A3C", "#3D3552", "#2F5D62", "#A0522D"];
+const AVATAR_TONES = ["#0F0F0E", "#FF5C28", "#5E6B57", "#7A4A2E", "#3A3550", "#2F4F5C", "#8C7B6B"];
 export function avatarTone(seed: string) {
   let h = 0;
   for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;

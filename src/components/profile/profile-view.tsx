@@ -56,7 +56,7 @@ export function ProfileView({ userId }: { userId: string }) {
                     <MapPin className="h-3.5 w-3.5" /> {p.location}
                   </span>
                 )}
-                {rel === "friends" && <span className="text-forest">· Friends</span>}
+                {rel === "friends" && <span className="text-ink">· Friends</span>}
               </p>
             </div>
             {isMe ? (
@@ -93,10 +93,10 @@ export function ProfileView({ userId }: { userId: string }) {
       ) : (
         <>
           {/* Taste identity */}
-          <section className="mt-10 grid gap-6 overflow-hidden rounded-3xl bg-forest p-6 text-cream shadow-lift sm:grid-cols-[1.2fr_1fr] sm:p-8">
+          <section className="mt-10 grid gap-6 overflow-hidden rounded-3xl bg-ink p-6 text-paper shadow-lift sm:grid-cols-[1.2fr_1fr] sm:p-8">
             <div>
-              <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-sage">
-                <Sparkles className="h-3.5 w-3.5 text-terracotta" /> Taste identity
+              <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em] text-stone">
+                <Sparkles className="h-3.5 w-3.5 text-accent" /> Taste identity
               </p>
               <h2 className="display mt-3 text-[30px] sm:text-[36px]">{taste.title}</h2>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -107,23 +107,23 @@ export function ProfileView({ userId }: { userId: string }) {
                     </span>
                   ))
                 ) : (
-                  <span className="text-[14px] text-cream/70">Rate a few more places and a personality will emerge.</span>
+                  <span className="text-[14px] text-paper/70">Rate a few more places and a personality will emerge.</span>
                 )}
               </div>
               <div className="mt-6">
-                <div className="flex justify-between text-[12px] text-cream/70">
+                <div className="flex justify-between text-[12px] text-paper/70">
                   <span>Profile strength</span>
                   <span>
                     {taste.reviewCount} {taste.reviewCount === 1 ? "rating" : "ratings"}
                   </span>
                 </div>
                 <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-white/10">
-                  <div className="h-full rounded-full bg-terracotta" style={{ width: `${Math.max(6, taste.progress * 100)}%` }} />
+                  <div className="h-full rounded-full bg-accent" style={{ width: `${Math.max(6, taste.progress * 100)}%` }} />
                 </div>
               </div>
             </div>
             <div className="space-y-2.5 sm:border-l sm:border-white/10 sm:pl-6">
-              <p className="text-[12px] font-semibold uppercase tracking-wider text-sage">Favourite categories</p>
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-stone">Favourite categories</p>
               {taste.topCategories.slice(0, 4).map((c) => {
                 const max = taste.topCategories[0].count;
                 return (
@@ -132,14 +132,14 @@ export function ProfileView({ userId }: { userId: string }) {
                       <span>{CATEGORY_META[c.category].plural}</span>
                     </div>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
-                      <div className="h-full rounded-full bg-sage" style={{ width: `${(c.count / max) * 100}%` }} />
+                      <div className="h-full rounded-full bg-stone" style={{ width: `${(c.count / max) * 100}%` }} />
                     </div>
                   </div>
                 );
               })}
               {taste.averageGiven != null && (
-                <p className="pt-2 text-[13px] text-cream/70">
-                  Average rating given <span className="font-semibold text-cream">{taste.averageGiven.toFixed(1)}★</span>
+                <p className="pt-2 text-[13px] text-paper/70">
+                  Average rating given <span className="font-semibold text-paper">{taste.averageGiven.toFixed(1)}★</span>
                   {taste.cities.length > 0 && <> · Eats in {taste.cities.join(", ")}</>}
                 </p>
               )}
@@ -225,7 +225,7 @@ export function ProfileView({ userId }: { userId: string }) {
                 <div className="grid grid-cols-2 gap-x-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4">
                   {recommends.map((r) => {
                     const pl = placeById(db, r.placeId);
-                    return pl ? <PlaceCard key={r.id} place={pl} wide note={<span className="font-medium text-terracotta">★ {r.overall.toFixed(1)} {r.recommendedItems[0] ? `· ${r.recommendedItems[0]}` : ""}</span>} /> : null;
+                    return pl ? <PlaceCard key={r.id} place={pl} wide note={<span className="font-medium text-accent">★ {r.overall.toFixed(1)} {r.recommendedItems[0] ? `· ${r.recommendedItems[0]}` : ""}</span>} /> : null;
                   })}
                 </div>
               ) : (

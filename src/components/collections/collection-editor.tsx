@@ -72,7 +72,7 @@ function Form({ collection, onDone }: { collection?: Collection; onDone: (id?: s
                 type="button"
                 onClick={() => setVisibility(v)}
                 aria-pressed={visibility === v}
-                className={cn("flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition", visibility === v ? "border-forest bg-forest-50" : "border-cream-300 bg-white hover:border-sage")}
+                className={cn("flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition", visibility === v ? "border-ink bg-ink-50" : "border-paper-300 bg-white hover:border-stone")}
               >
                 <M.icon className="h-4 w-4" />
                 <span className="text-[13.5px] font-medium">{M.label}</span>

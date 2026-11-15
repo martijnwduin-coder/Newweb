@@ -47,15 +47,15 @@ export function FriendPickCard({ place, review, by, className }: { place: Place;
   return (
     <article className={cn("group relative w-[78vw] max-w-[320px] shrink-0 snap-start sm:w-[300px]", className)}>
       <Link href={`/place/${place.id}`} className="block">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-cream-200 shadow-soft">
-          <PlaceImage src={place.imageUrl} alt={place.name} category={place.category} className="h-full w-full transition duration-700 group-hover:scale-[1.04]" />
+        <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-paper-200 shadow-soft">
+          <PlaceImage src={place.imageUrl} alt={place.name} category={place.category} className="h-full w-full transition duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]" />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 p-4 text-white">
             <div className="mb-1 flex items-center gap-2 text-[12px] font-medium text-white/80">
               <span>{place.cuisine ?? CATEGORY_META[place.category].label}</span>
               {priceLabel(place.priceLevel) && <span>· {priceLabel(place.priceLevel)}</span>}
             </div>
-            <h3 className="text-xl font-semibold leading-tight tracking-tight">{place.name}</h3>
+            <h3 className="text-[24px] font-normal leading-tight tracking-tight">{place.name}</h3>
             <p className="text-[13px] text-white/75">{placeSubtitle(place)}</p>
           </div>
         </div>
@@ -72,10 +72,10 @@ export function FriendPickCard({ place, review, by, className }: { place: Place;
               {by.fullName.split(" ")[0]} <span className="font-normal text-muted">recommends</span>
             </p>
           </div>
-          <span className="rounded-full bg-terracotta-50 px-2 py-0.5 text-[12px] font-semibold text-[#9a5638]">★ {review.overall.toFixed(1)}</span>
+          <span className="rounded-full bg-accent-50 px-2 py-0.5 text-[12px] font-semibold text-[#B4380C]">★ {review.overall.toFixed(1)}</span>
         </div>
         <p className="mt-2 line-clamp-2 text-[13.5px] leading-snug text-charcoal/85">“{review.text}”</p>
-        <div className="mt-2.5 flex items-center justify-between border-t border-cream-200 pt-2.5">
+        <div className="mt-2.5 flex items-center justify-between border-t border-paper-200 pt-2.5">
           <PelotonRating rating={stats.rating} count={stats.count} size="sm" />
           {stats.recommenders.length > 1 && (
             <span className="flex items-center gap-1.5 text-[12px] text-muted">
@@ -90,14 +90,14 @@ export function FriendPickCard({ place, review, by, className }: { place: Place;
 }
 
 /** Standard image-led card for horizontal rails and grids. */
-export function PlaceCard({ place, className, note, wide }: { place: Place; className?: string; note?: React.ReactNode; wide?: boolean }) {
+export function PlaceCard({ place, className, note, wide, dark }: { place: Place; className?: string; note?: React.ReactNode; wide?: boolean; dark?: boolean }) {
   const { db, meId } = useStore();
   const stats = placeStats(db, place.id, meId);
   return (
-    <article className={cn("group relative shrink-0 snap-start", wide ? "w-full" : "w-[62vw] max-w-[250px] sm:w-[230px]", className)}>
+    <article className={cn("group relative shrink-0 snap-start", wide ? "w-full" : "w-[66vw] max-w-[300px] sm:w-[280px]", className)}>
       <Link href={`/place/${place.id}`} className="block">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-cream-200">
-          <PlaceImage src={place.imageUrl} alt={place.name} category={place.category} className="h-full w-full transition duration-700 group-hover:scale-[1.04]" />
+        <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-paper-200">
+          <PlaceImage src={place.imageUrl} alt={place.name} category={place.category} className="h-full w-full transition duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]" />
           {stats.recommenders.length > 0 && (
             <span className="absolute bottom-2.5 left-2.5 flex items-center gap-1.5 rounded-full bg-white/90 py-1 pl-1 pr-2.5 text-[11px] font-medium text-charcoal backdrop-blur">
               <AvatarStack users={stats.recommenders} max={2} />
@@ -107,10 +107,10 @@ export function PlaceCard({ place, className, note, wide }: { place: Place; clas
         </div>
         <div className="mt-2.5 px-0.5">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-[15px] font-semibold tracking-tight text-charcoal">{place.name}</h3>
-            <PelotonRating rating={stats.rating} count={stats.count} size="sm" className="shrink-0" />
+            <h3 className={cn("truncate text-[16px] font-medium tracking-tight", dark ? "text-paper" : "text-charcoal")}>{place.name}</h3>
+            <PelotonRating rating={stats.rating} count={stats.count} size="sm" className={cn("shrink-0", dark && "text-paper [&_span]:text-paper/50")} />
           </div>
-          <p className="truncate text-[13px] text-muted">
+          <p className={cn("truncate text-[13px]", dark ? "text-paper/55" : "text-muted")}>
             {place.cuisine ?? CATEGORY_META[place.category].label} · {placeSubtitle(place)}
           </p>
           {place.googleRating != null && !stats.count && <GoogleRating rating={place.googleRating} count={place.googleRatingCount} className="mt-1" />}
@@ -149,7 +149,7 @@ export function PlaceRow({ place, active, onHover, onClick, distance }: { place:
             <GoogleRating rating={place.googleRating} count={place.googleRatingCount} />
           </div>
           {stats.recommenders.length > 0 && (
-            <p className="mt-1.5 flex items-center gap-1.5 text-[12px] text-forest">
+            <p className="mt-1.5 flex items-center gap-1.5 text-[12px] text-ink">
               <AvatarStack users={stats.recommenders} max={3} />
               <span className="truncate">
                 Recommended by {stats.recommenders.slice(0, 2).map((p) => p.fullName.split(" ")[0]).join(" & ")}

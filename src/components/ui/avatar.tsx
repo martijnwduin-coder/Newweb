@@ -6,7 +6,7 @@ const sizes = { xs: "h-6 w-6 text-[10px]", sm: "h-8 w-8 text-xs", md: "h-10 w-10
 export function Avatar({ user, size = "md", className, ring = false }: { user: Pick<Profile, "id" | "fullName" | "avatarUrl">; size?: keyof typeof sizes; className?: string; ring?: boolean }) {
   return (
     <span
-      className={cn("relative inline-grid shrink-0 place-items-center overflow-hidden rounded-full font-semibold text-white", sizes[size], ring && "ring-2 ring-cream", className)}
+      className={cn("relative inline-grid shrink-0 place-items-center overflow-hidden rounded-full font-semibold text-white", sizes[size], ring && "ring-2 ring-paper", className)}
       style={{ background: avatarTone(user.id) }}
       title={user.fullName}
     >
@@ -28,7 +28,7 @@ export function AvatarStack({ users, max = 3, size = "xs" }: { users: Pick<Profi
         <Avatar key={u.id} user={u} size={size} ring />
       ))}
       {users.length > max && (
-        <span className={cn("inline-grid place-items-center rounded-full bg-cream-200 font-semibold text-muted ring-2 ring-cream", sizes[size])}>+{users.length - max}</span>
+        <span className={cn("inline-grid place-items-center rounded-full bg-paper-200 font-semibold text-muted ring-2 ring-paper", sizes[size])}>+{users.length - max}</span>
       )}
     </span>
   );

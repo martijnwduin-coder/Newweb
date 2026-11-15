@@ -34,7 +34,7 @@ export default function SettingsPage() {
       <Link href="/profile" className="inline-flex items-center gap-1.5 text-[14px] text-muted hover:text-charcoal">
         <ArrowLeft className="h-4 w-4" /> Profile
       </Link>
-      <h1 className="display mt-4 text-[36px] text-forest">Settings</h1>
+      <h1 className="display mt-4 text-[36px] text-ink">Settings</h1>
 
       <form
         className="mt-8 space-y-10"
@@ -59,8 +59,8 @@ export default function SettingsPage() {
             </div>
             <div>
               <Label htmlFor="username">Username</Label>
-              <Input id="username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase() })} aria-invalid={!usernameValid} className={cn(!usernameValid && "border-terracotta")} />
-              {!usernameValid && <p className="mt-1 text-[12px] text-[#a14b2c]">3–30 characters: a–z, 0–9, _ or .</p>}
+              <Input id="username" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase() })} aria-invalid={!usernameValid} className={cn(!usernameValid && "border-accent")} />
+              {!usernameValid && <p className="mt-1 text-[12px] text-[#C2381A]">3–30 characters: a–z, 0–9, _ or .</p>}
             </div>
           </div>
           <div>
@@ -92,10 +92,10 @@ export default function SettingsPage() {
                       key={v}
                       type="button"
                       onClick={() => setPrivacy({ ...privacy, [row.key]: v })}
-                      className={cn("flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition", on ? "border-forest bg-forest-50" : "border-cream-300 hover:border-sage")}
+                      className={cn("flex flex-col items-start gap-1 rounded-2xl border p-3 text-left transition", on ? "border-ink bg-ink-50" : "border-paper-300 hover:border-stone")}
                       aria-pressed={on}
                     >
-                      <M.icon className={cn("h-4 w-4", on ? "text-forest" : "text-muted")} />
+                      <M.icon className={cn("h-4 w-4", on ? "text-ink" : "text-muted")} />
                       <span className="text-[13.5px] font-medium">{M.label}</span>
                       <span className="text-[11.5px] leading-tight text-muted">{M.hint}</span>
                     </button>

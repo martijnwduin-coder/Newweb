@@ -54,7 +54,7 @@ export function ReviewCard({ review, place, showPlace = false, className }: { re
         <div className="flex gap-1">
           {isMine && place && (
             <ReviewDialog place={place}>
-              <button className="rounded-full p-2 text-muted hover:bg-cream-200" aria-label="Edit review">
+              <button className="rounded-full p-2 text-muted hover:bg-paper-200" aria-label="Edit review">
                 <Pencil className="h-4 w-4" />
               </button>
             </ReviewDialog>
@@ -72,7 +72,7 @@ export function ReviewCard({ review, place, showPlace = false, className }: { re
                 ratingLabel: isMine ? "my rating" : `${author.fullName.split(" ")[0]}'s rating`,
               }}
             >
-              <button className="rounded-full p-2 text-muted hover:bg-cream-200" aria-label="Share review">
+              <button className="rounded-full p-2 text-muted hover:bg-paper-200" aria-label="Share review">
                 <Share className="h-4 w-4" />
               </button>
             </ShareDialog>
@@ -90,7 +90,7 @@ export function ReviewCard({ review, place, showPlace = false, className }: { re
       )}
       {review.recommendedItems.length > 0 && (
         <p className="mt-3 text-[13px] text-charcoal">
-          <span className="font-semibold text-forest">Order: </span>
+          <span className="font-semibold text-ink">Order: </span>
           {review.recommendedItems.join(" · ")}
         </p>
       )}

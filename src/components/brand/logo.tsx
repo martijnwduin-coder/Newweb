@@ -15,9 +15,9 @@ export function ChairMark({ className, strokeWidth = 2.4 }: { className?: string
   );
 }
 
-export function AppIcon({ className }: { className?: string }) {
+export function AppIcon({ className, inverted = false }: { className?: string; inverted?: boolean }) {
   return (
-    <span className={cn("inline-grid place-items-center rounded-[28%] bg-forest text-cream", className)}>
+    <span className={cn("inline-grid place-items-center rounded-[28%]", inverted ? "bg-paper text-ink" : "bg-ink text-paper", className)}>
       <ChairMark className="h-[62%] w-[62%]" />
     </span>
   );
@@ -26,11 +26,11 @@ export function AppIcon({ className }: { className?: string }) {
 export function Logo({ className, compact = false, tone = "dark" }: { className?: string; compact?: boolean; tone?: "dark" | "light" }) {
   return (
     <span className={cn("inline-flex items-center gap-2.5 select-none", className)} aria-label="Peloton AI">
-      <AppIcon className="h-8 w-8 shadow-soft" />
+      <AppIcon className="h-8 w-8" inverted={tone === "light"} />
       {!compact && (
-        <span className={cn("flex items-baseline gap-1 text-[15px] font-semibold tracking-[0.22em]", tone === "dark" ? "text-forest" : "text-cream")}>
+        <span className={cn("flex items-baseline gap-1 text-[15px] font-semibold tracking-[0.22em]", tone === "dark" ? "text-ink" : "text-paper")}>
           PELOTON
-          <span className="text-[10px] font-semibold tracking-[0.12em] text-terracotta">AI</span>
+          <span className="text-[10px] font-semibold tracking-[0.12em] text-accent">AI</span>
         </span>
       )}
     </span>

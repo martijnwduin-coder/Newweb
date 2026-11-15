@@ -111,9 +111,9 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
                   aria-pressed={on}
                 >
                   <span className="relative">
-                    <Avatar user={f} size="lg" className={cn("transition", on && "ring-[3px] ring-forest ring-offset-2 ring-offset-cream")} />
+                    <Avatar user={f} size="lg" className={cn("transition", on && "ring-[3px] ring-ink ring-offset-2 ring-offset-paper")} />
                     {on && (
-                      <span className="absolute -bottom-0.5 -right-0.5 grid h-5 w-5 place-items-center rounded-full bg-forest text-cream ring-2 ring-cream">
+                      <span className="absolute -bottom-0.5 -right-0.5 grid h-5 w-5 place-items-center rounded-full bg-ink text-paper ring-2 ring-paper">
                         <Check className="h-3 w-3" />
                       </span>
                     )}
@@ -144,9 +144,9 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
           <ShareAction icon={Share2} label="More" onClick={nativeShare} disabled={!canNativeShare} />
           <ShareAction icon={Download} label="Story card" href={shareCardUrl(target, "story")} download={`peloton-${target.id}.png`} />
         </div>
-        <div className="mt-3 flex items-center gap-2 rounded-xl border border-cream-300 bg-white px-3 py-2">
+        <div className="mt-3 flex items-center gap-2 rounded-xl border border-paper-300 bg-white px-3 py-2">
           <span className="flex-1 truncate text-[13px] text-muted">{url}</span>
-          <button onClick={copy} className="rounded-lg p-1.5 text-muted hover:bg-cream-200" aria-label="Copy link">
+          <button onClick={copy} className="rounded-lg p-1.5 text-muted hover:bg-paper-200" aria-label="Copy link">
             <Copy className="h-4 w-4" />
           </button>
         </div>
@@ -155,7 +155,7 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
       {/* Card preview */}
       <section>
         <h3 className="mb-3 text-[13px] font-semibold uppercase tracking-wider text-muted">Instagram-ready card</h3>
-        <div className="flex justify-center rounded-2xl bg-cream-200 p-4">
+        <div className="flex justify-center rounded-2xl bg-paper-200 p-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={shareCardUrl(target, "story")} alt="Share card preview" className="h-72 rounded-xl shadow-lift" />
         </div>

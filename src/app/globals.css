@@ -1,31 +1,33 @@
 @import "tailwindcss";
 
-/* Peloton AI design tokens */
+/* Peloton AI design tokens — editorial agency style:
+   ink + off-white sections, one vivid orange accent, oversized light headlines. */
 @theme {
-  --color-forest: #183d32;
-  --color-forest-700: #12302a;
-  --color-forest-50: #e8eeeb;
-  --color-cream: #f7f5ef;
-  --color-cream-200: #efebe1;
-  --color-cream-300: #e4dfd2;
-  --color-charcoal: #242824;
-  --color-sage: #a7b5a1;
-  --color-sage-100: #e3e8df;
-  --color-terracotta: #c77c5c;
-  --color-terracotta-50: #f6e9e2;
-  --color-muted: #6b716b;
+  --color-ink: #0f0f0e;
+  --color-ink-700: #000000;
+  --color-ink-50: #e9e7e1;
+  --color-paper: #f2f0eb;
+  --color-paper-200: #e8e5de;
+  --color-paper-300: #d9d5cc;
+  --color-charcoal: #161616;
+  --color-stone: #a9a49a;
+  --color-stone-100: #e2dfd8;
+  --color-accent: #ff5c28;
+  --color-accent-50: #ffe6dc;
+  --color-muted: #6e6b66;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, sans-serif;
 
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
   --radius-3xl: 1.75rem;
 
-  --shadow-soft: 0 1px 2px rgb(24 61 50 / 0.04), 0 4px 16px -4px rgb(24 61 50 / 0.08);
-  --shadow-lift: 0 2px 4px rgb(24 61 50 / 0.05), 0 16px 40px -12px rgb(24 61 50 / 0.22);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.03), 0 6px 20px -8px rgb(0 0 0 / 0.10);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.04), 0 24px 48px -16px rgb(0 0 0 / 0.28);
 
-  --animate-fade-up: fade-up 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-  --animate-scale-in: scale-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-scale-in: scale-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-shimmer: shimmer 1.6s linear infinite;
 
   @keyframes fade-up {
@@ -67,14 +69,33 @@ body {
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 
+/* Oversized, light display type */
 .display {
-  letter-spacing: -0.035em;
-  line-height: 1.02;
-  font-weight: 650;
+  font-family: var(--font-display);
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+  font-weight: 300;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Dark editorial section */
+.section-dark {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* Global easing for interactive elements */
+a, button {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .skeleton {
-  background: linear-gradient(90deg, var(--color-cream-200) 0px, #f4f1e9 120px, var(--color-cream-200) 240px);
+  background: linear-gradient(90deg, var(--color-cream-200) 0px, #efece6 120px, var(--color-cream-200) 240px);
   background-size: 800px 100%;
   animation: var(--animate-shimmer);
 }
@@ -84,3 +105,19 @@ body {
 /* Google Maps info window reset */
 .gm-style .gm-style-iw-c { padding: 0 !important; border-radius: 1rem !important; }
 .gm-style .gm-style-iw-d { overflow: hidden !important; }
+
+/* Magazine grid: an asymmetric 9-column rhythm on large screens */
+@media (min-width: 1024px) {
+  .mag-grid {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    row-gap: 4rem;
+  }
+  .mag-grid > :nth-child(6n + 1) { grid-column: 3 / -1; }
+  .mag-grid > :nth-child(6n + 2) { grid-column: 1 / span 4; }
+  .mag-grid > :nth-child(6n + 3) { grid-column: 5 / span 5; margin-top: 6rem; }
+  .mag-grid > :nth-child(6n + 4) { grid-column: 1 / span 7; }
+  .mag-grid > :nth-child(6n + 5) { grid-column: 1 / span 5; }
+  .mag-grid > :nth-child(6n) { grid-column: 6 / span 4; margin-top: 6rem; }
+  .mag-grid > :nth-child(3n + 1) .cover { aspect-ratio: 16 / 9; }
+}

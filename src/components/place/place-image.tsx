@@ -12,7 +12,7 @@ export function PlaceImage({ src, alt, category = "restaurant", className, sizes
   const Icon = ICONS[category];
   if (!src || failed)
     return (
-      <div className={cn("grid place-items-center bg-gradient-to-br from-sage-100 via-cream-200 to-terracotta-50 text-forest/40", className)} aria-label={alt}>
+      <div className={cn("grid place-items-center bg-gradient-to-br from-stone-100 via-paper-200 to-accent-50 text-ink/40", className)} aria-label={alt}>
         <Icon className="h-1/4 max-h-12 w-1/4 max-w-12" strokeWidth={1.4} />
       </div>
     );

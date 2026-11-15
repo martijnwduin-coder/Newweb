@@ -65,7 +65,7 @@ function Body({ placeId }: { placeId: string }) {
                     <V className="h-3 w-3" /> {VISIBILITY_META[c.visibility].label} · {ids.length} places
                   </span>
                 </span>
-                <span className={cn("grid h-7 w-7 place-items-center rounded-full border transition", has ? "border-forest bg-forest text-cream" : "border-cream-300 bg-white")}>
+                <span className={cn("grid h-7 w-7 place-items-center rounded-full border transition", has ? "border-ink bg-ink text-paper" : "border-paper-300 bg-white")}>
                   {has && <Check className="h-4 w-4" />}
                 </span>
               </button>

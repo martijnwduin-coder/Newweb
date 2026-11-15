@@ -12,13 +12,13 @@ import { getSupabaseBrowser } from "@/lib/supabase/client";
 export default function LoginPage() {
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
-      <div className="relative hidden overflow-hidden bg-forest lg:block">
+      <div className="relative hidden overflow-hidden bg-ink lg:block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=70" alt="" className="h-full w-full object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-forest via-forest/40 to-transparent" />
-        <div className="absolute bottom-0 p-12 text-cream">
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+        <div className="absolute bottom-0 p-12 text-paper">
           <p className="display max-w-md text-[48px]">Discover places through people, not algorithms.</p>
-          <p className="mt-4 text-cream/70">Good places. Better connections.</p>
+          <p className="mt-4 text-paper/70">Good places. Better connections.</p>
         </div>
       </div>
       <div className="flex flex-col justify-center px-6 py-12 sm:px-16">
@@ -44,7 +44,7 @@ function AuthForm() {
   if (!isSupabaseConfigured) {
     return (
       <div className="mt-12 max-w-sm">
-        <h1 className="display text-[36px] text-forest">Welcome to the table.</h1>
+        <h1 className="display text-[36px] text-ink">Welcome to the table.</h1>
         <p className="mt-3 text-muted">
           Authentication isn&apos;t connected yet. Add your Supabase URL and anon key to enable accounts — until then, explore the full app with clearly-labelled demo data.
         </p>
@@ -76,7 +76,7 @@ function AuthForm() {
 
   return (
     <div className="mt-12 w-full max-w-sm">
-      <h1 className="display text-[36px] text-forest">{mode === "signin" ? "Welcome back." : "Pull up a chair."}</h1>
+      <h1 className="display text-[36px] text-ink">{mode === "signin" ? "Welcome back." : "Pull up a chair."}</h1>
       <p className="mt-2 text-muted">{mode === "signin" ? "Sign in to see where your friends are going." : "Create your Peloton in seconds."}</p>
 
       <Button variant="outline" size="lg" className="mt-8 w-full" onClick={() => sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo } })}>
@@ -89,7 +89,7 @@ function AuthForm() {
         Continue with Google
       </Button>
       <div className="my-6 flex items-center gap-3 text-[12px] text-muted">
-        <span className="h-px flex-1 bg-cream-300" /> or with email <span className="h-px flex-1 bg-cream-300" />
+        <span className="h-px flex-1 bg-paper-300" /> or with email <span className="h-px flex-1 bg-paper-300" />
       </div>
 
       <form onSubmit={submit} className="space-y-4">
@@ -107,7 +107,7 @@ function AuthForm() {
           <Label htmlFor="password">Password</Label>
           <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signin" ? "current-password" : "new-password"} minLength={8} required />
         </div>
-        {message && <p className="rounded-xl bg-terracotta-50 px-3 py-2 text-[13px] text-[#8a4e33]">{message}</p>}
+        {message && <p className="rounded-xl bg-accent-50 px-3 py-2 text-[13px] text-[#A3360D]">{message}</p>}
         <Button type="submit" size="lg" className="w-full" disabled={busy}>
           {busy && <Loader2 className="animate-spin" />} {mode === "signin" ? "Sign in" : "Create account"}
         </Button>
@@ -123,7 +123,7 @@ function AuthForm() {
         >
           <Mail className="h-3.5 w-3.5" /> Email me a magic link
         </button>
-        <button className="font-medium text-forest" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
+        <button className="font-medium text-ink" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
           {mode === "signin" ? "Create account" : "I have an account"}
         </button>
       </div>

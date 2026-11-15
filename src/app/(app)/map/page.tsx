@@ -221,10 +221,10 @@ function MapExplorer() {
         }}
         placeholder="Search places, cuisines, neighborhoods…"
         aria-label="Search the map"
-        className="h-12 w-full rounded-full border border-cream-300 bg-white pl-11 pr-10 text-[15px] shadow-soft focus:border-sage focus:outline-none focus:ring-4 focus:ring-sage/25"
+        className="h-12 w-full rounded-full border border-paper-300 bg-white pl-11 pr-10 text-[15px] shadow-soft focus:border-stone focus:outline-none focus:ring-4 focus:ring-stone/25"
       />
       {query && (
-        <button type="button" onClick={() => (setQuery(""), setGoogleResults([]))} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted hover:bg-cream-200" aria-label="Clear search">
+        <button type="button" onClick={() => (setQuery(""), setGoogleResults([]))} className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted hover:bg-paper-200" aria-label="Clear search">
           <X className="h-4 w-4" />
         </button>
       )}
@@ -244,11 +244,11 @@ function MapExplorer() {
         />
       ))}
       {results.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-cream-300 p-6 text-center text-sm text-muted">
+        <div className="rounded-2xl border border-dashed border-paper-300 p-6 text-center text-sm text-muted">
           No Peloton places match{query ? ` “${query}”` : ""} in {city}.
           {activeFilters > 0 && (
             <button
-              className="mt-2 block w-full font-medium text-forest"
+              className="mt-2 block w-full font-medium text-ink"
               onClick={() => {
                 setCats([]);
                 setMinRating(0);
@@ -269,13 +269,13 @@ function MapExplorer() {
             <p className="flex items-center gap-1.5 text-[12px] font-semibold uppercase tracking-wider text-muted">
               <Globe className="h-3.5 w-3.5" /> From Google Places
             </p>
-            <button onClick={searchGoogle} className="text-[13px] font-medium text-forest hover:underline" disabled={googleState === "loading"}>
+            <button onClick={searchGoogle} className="text-[13px] font-medium text-ink hover:underline" disabled={googleState === "loading"}>
               {googleState === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : googleResults.length ? "Search this area" : `Search Google for “${query.trim()}”`}
             </button>
           </div>
           {googleState === "unconfigured" && (
             <p className="rounded-2xl bg-white/70 p-4 text-[13px] text-muted">
-              Google Places isn&apos;t connected yet. Add <code className="rounded bg-cream-200 px-1">GOOGLE_PLACES_API_KEY</code> to search every venue worldwide.
+              Google Places isn&apos;t connected yet. Add <code className="rounded bg-paper-200 px-1">GOOGLE_PLACES_API_KEY</code> to search every venue worldwide.
             </p>
           )}
           {googleResults.map((p) => (
@@ -315,7 +315,7 @@ function MapExplorer() {
           setSelectedId(null);
           setGoogleResults([]);
         }}
-        className="h-12 appearance-none rounded-full border border-cream-300 bg-white pl-4 pr-9 text-[14px] font-medium shadow-soft focus:outline-none focus:ring-4 focus:ring-sage/25"
+        className="h-12 appearance-none rounded-full border border-paper-300 bg-white pl-4 pr-9 text-[14px] font-medium shadow-soft focus:outline-none focus:ring-4 focus:ring-stone/25"
         aria-label="City"
       >
         {allCities.map((c) => (
@@ -327,12 +327,13 @@ function MapExplorer() {
   );
 
   return (
-    <div className="fixed inset-x-0 bottom-16 top-0 lg:relative lg:bottom-auto lg:grid lg:h-dvh lg:grid-cols-[440px_1fr] lg:grid-rows-[minmax(0,1fr)]">
+    <div className="fixed inset-x-0 bottom-16 top-0 lg:relative lg:bottom-auto lg:grid lg:h-[calc(100dvh-72px)] lg:grid-cols-[440px_1fr] lg:grid-rows-[minmax(0,1fr)]">
       {/* Sidebar / list */}
-      <section className={cn("flex h-full min-h-0 flex-col bg-cream lg:border-r lg:border-cream-300/70", view === "map" ? "max-lg:hidden" : "max-lg:pt-[150px]")}>
+      <section className={cn("flex h-full min-h-0 flex-col bg-paper lg:border-r lg:border-paper-300/70", view === "map" ? "max-lg:hidden" : "max-lg:pt-[150px]")}>
         <div className="hidden space-y-4 px-5 pb-4 pt-8 lg:block">
           <div>
-            <h1 className="text-[26px] font-semibold tracking-tight">Explore {city}</h1>
+            <p className="eyebrow text-accent">Explore</p>
+            <h1 className="display mt-1 text-[44px]">{city}</h1>
             <p className="text-[14px] text-muted">
               {results.length} Peloton {results.length === 1 ? "place" : "places"}
               {friendsOnly ? " your friends love" : ""}
@@ -353,7 +354,7 @@ function MapExplorer() {
 
         <button
           onClick={locate}
-          className="absolute right-4 top-4 hidden h-11 items-center gap-2 rounded-full bg-white px-4 text-[13px] font-medium shadow-lift hover:bg-cream lg:inline-flex"
+          className="absolute right-4 top-4 hidden h-11 items-center gap-2 rounded-full bg-white px-4 text-[13px] font-medium shadow-lift hover:bg-paper lg:inline-flex"
         >
           <LocateFixed className="h-4 w-4" /> Near me
         </button>
@@ -363,19 +364,19 @@ function MapExplorer() {
       </section>
 
       {/* Mobile overlay controls */}
-      <div className="absolute inset-x-0 top-0 z-20 space-y-2.5 bg-gradient-to-b from-cream via-cream/90 to-transparent px-4 pb-6 pt-3 lg:hidden">
+      <div className="absolute inset-x-0 top-0 z-20 space-y-2.5 bg-gradient-to-b from-paper via-paper/90 to-transparent px-4 pb-6 pt-3 lg:hidden">
         <div className="flex gap-2">
           {searchBox}
-          <button onClick={locate} className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-cream-300 bg-white shadow-soft" aria-label="Near me">
+          <button onClick={locate} className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-paper-300 bg-white shadow-soft" aria-label="Near me">
             <LocateFixed className="h-4 w-4" />
           </button>
           <button
             onClick={() => setShowFilters((v) => !v)}
-            className={cn("relative grid h-12 w-12 shrink-0 place-items-center rounded-full border shadow-soft", showFilters ? "border-forest bg-forest text-cream" : "border-cream-300 bg-white")}
+            className={cn("relative grid h-12 w-12 shrink-0 place-items-center rounded-full border shadow-soft", showFilters ? "border-ink bg-ink text-paper" : "border-paper-300 bg-white")}
             aria-label="Filters"
           >
             <SlidersHorizontal className="h-4 w-4" />
-            {activeFilters > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-5 w-5 place-items-center rounded-full bg-terracotta text-[10px] font-bold text-white">{activeFilters}</span>}
+            {activeFilters > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-5 w-5 place-items-center rounded-full bg-accent text-[10px] font-bold text-white">{activeFilters}</span>}
           </button>
         </div>
         <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4">
@@ -391,7 +392,7 @@ function MapExplorer() {
       <button
         onClick={() => setView((v) => (v === "map" ? "list" : "map"))}
         className={cn(
-          "absolute left-1/2 z-30 flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-charcoal px-5 text-[14px] font-medium text-cream shadow-lift transition lg:hidden",
+          "absolute left-1/2 z-30 flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-charcoal px-5 text-[14px] font-medium text-paper shadow-lift transition lg:hidden",
           selected && view === "map" ? "bottom-[200px]" : "bottom-5",
         )}
       >
@@ -441,7 +442,7 @@ function PreviewCard({ place, onClose, onOpenGoogle }: { place: Place; onClose: 
           <GoogleRating rating={place.googleRating} count={place.googleRatingCount} />
         </div>
         {stats.recommenders.length > 0 && (
-          <p className="mt-2.5 flex items-center gap-2 rounded-xl bg-terracotta-50/70 px-3 py-2 text-[13px] text-[#8a4e33]">
+          <p className="mt-2.5 flex items-center gap-2 rounded-xl bg-accent-50/70 px-3 py-2 text-[13px] text-[#A3360D]">
             <AvatarStack users={stats.recommenders} />
             Recommended by {stats.recommenders.map((p) => p.fullName.split(" ")[0]).slice(0, 3).join(", ")}
           </p>

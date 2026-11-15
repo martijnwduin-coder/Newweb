@@ -1,23 +1,20 @@
 "use client";
-import { ArrowRight, Bell, Bookmark, Coffee, Inbox, Sparkles, Users } from "lucide-react";
+import { ArrowUpRight, Bookmark, Users } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { PlaceImage } from "@/components/place/place-image";
 import { FriendPickCard, PlaceCard, placeSubtitle } from "@/components/place/place-card";
 import { SearchBar } from "@/components/shell/search-bar";
-import { useUnreadCount } from "@/components/shell/app-shell";
 import { Avatar } from "@/components/ui/avatar";
-import { DemoBadge } from "@/components/ui/badge";
+import { ArrowButton } from "@/components/ui/arrow-button";
 import { Button } from "@/components/ui/button";
-import { Chip } from "@/components/ui/chip";
 import { EmptyState, Rail, SectionHeader } from "@/components/ui/rail";
 import { activityFeed, cities, communityFavourites, friendPicks, placeById, placeStats, profileById, trustedIds } from "@/lib/selectors";
 import { useStore } from "@/lib/store/store";
-import { greeting, timeAgo } from "@/lib/utils";
+import { cn, greeting, timeAgo } from "@/lib/utils";
 
 export default function DiscoverPage() {
   const { db, meId, me, mode } = useStore();
-  const unread = useUnreadCount();
   const [city, setCity] = useState<string | null>(null);
   const inCity = (placeId: string) => !city || placeById(db, placeId)?.city === city;
 
@@ -51,184 +48,169 @@ export default function DiscoverPage() {
   const inbox = db.recommendations.filter((r) => r.receiverId === meId).slice(0, 3);
   const firstName = me?.fullName.split(" ")[0];
 
+  const cityList = cities(db);
+
   return (
-    <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-6 sm:px-8 lg:pt-10">
-      {/* Desktop top bar */}
-      <div className="mb-10 hidden items-center gap-4 lg:flex">
-        <SearchBar className="max-w-xl flex-1" />
-        <div className="ml-auto flex items-center gap-2">
-          {mode === "demo" && <DemoBadge />}
-          <Link href="/notifications" className="relative grid h-11 w-11 place-items-center rounded-full bg-white shadow-soft hover:shadow-lift" aria-label="Notifications">
-            <Bell className="h-[18px] w-[18px]" />
-            {unread > 0 && <span className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-terracotta px-1 text-[11px] font-semibold text-white ring-2 ring-cream">{unread}</span>}
-          </Link>
-          {me && (
-            <Link href="/profile">
-              <Avatar user={me} size="md" className="shadow-soft" />
-            </Link>
-          )}
-        </div>
-      </div>
-
-      {/* Hero */}
-      <section className="animate-fade-up">
-        <p className="text-[13px] font-medium uppercase tracking-[0.18em] text-terracotta">{[firstName ? `Hi ${firstName}` : null, new Date().toLocaleDateString("en-GB", { weekday: "long" }), me?.location].filter(Boolean).join(" · ")}</p>
-        <h1 className="display mt-2 max-w-2xl text-[40px] text-forest sm:text-[56px]">
-          {greeting()}.
-          <br />
-          <span className="text-charcoal">Where should we go?</span>
-        </h1>
-        <SearchBar className="mt-6 lg:hidden" large />
-        <div className="no-scrollbar -mx-4 mt-6 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-          <Chip active={!city} onClick={() => setCity(null)}>
-            Everywhere
-          </Chip>
-          {cities(db).map((c) => (
-            <Chip key={c} active={city === c} onClick={() => setCity(c === city ? null : c)}>
-              {c}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      {/* AI teaser */}
-      <Link
-        href="/assistant"
-        className="group mt-8 flex items-center gap-4 rounded-3xl bg-forest p-5 text-cream shadow-lift transition hover:bg-forest-700 sm:p-6"
-      >
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10">
-          <Sparkles className="h-5 w-5 text-terracotta" />
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold">Ask Peloton</span>
-          <span className="block truncate text-[14px] text-cream/70">“Find me a great Italian restaurant in Amsterdam recommended by my friends.”</span>
-        </span>
-        <ArrowRight className="h-5 w-5 shrink-0 transition group-hover:translate-x-1" />
-      </Link>
-
-      {/* Inbox */}
-      {inbox.length > 0 && !city && (
-        <section className="mt-10">
-          <SectionHeader title="Sent to you" subtitle="Personal recommendations from your friends" />
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {inbox.map((r) => {
-              const from = profileById(db, r.senderId);
-              const place = r.placeId ? placeById(db, r.placeId) : null;
-              const collection = r.collectionId ? db.collections.find((c) => c.id === r.collectionId) : null;
-              if (!from || (!place && !collection)) return null;
+    <div>
+      {/* Hero — full-bleed dark, oversized light type */}
+      <section className="section-dark relative overflow-hidden px-4 pb-16 pt-14 sm:px-8 lg:pb-24 lg:pt-24">
+        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-accent/20 blur-[120px]" />
+        <div className="relative mx-auto max-w-[1440px] animate-fade-up">
+          <p className="eyebrow text-paper/50">
+            {[firstName ? `Hi ${firstName}` : null, new Date().toLocaleDateString("en-GB", { weekday: "long" }), me?.location].filter(Boolean).join("  ·  ")}
+          </p>
+          <h1 className="display mt-6 max-w-[14ch] text-[52px] sm:text-[88px] lg:text-[128px]">
+            {greeting()}. Where should we <span className="text-accent">go?</span>
+          </h1>
+          <div className="mt-10 flex flex-col gap-4 lg:mt-14 lg:flex-row lg:items-center">
+            <SearchBar className="w-full lg:max-w-xl" large />
+            <ArrowButton href="/assistant" className="self-start lg:self-auto">
+              Ask Peloton
+            </ArrowButton>
+          </div>
+          <div className="no-scrollbar -mx-4 mt-8 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            {[null, ...cityList].map((c) => {
+              const active = city === c;
               return (
-                <Link
-                  key={r.id}
-                  href={place ? `/place/${place.id}` : `/collections/${collection!.id}`}
-                  className="flex gap-3 rounded-2xl bg-white p-3 shadow-soft transition hover:shadow-lift"
+                <button
+                  key={c ?? "all"}
+                  onClick={() => setCity(c === city ? null : c)}
+                  aria-pressed={active}
+                  className={cn(
+                    "h-10 shrink-0 rounded-full border px-5 text-[14px] transition-colors duration-300",
+                    active ? "border-paper bg-paper text-ink" : "border-white/20 text-paper/80 hover:border-white/60",
+                  )}
                 >
-                  <PlaceImage src={place?.imageUrl ?? collection?.coverImage} alt="" category={place?.category} className="h-[72px] w-[72px] shrink-0 rounded-xl" />
-                  <div className="min-w-0">
-                    <p className="flex items-center gap-1.5 text-[12px] text-muted">
-                      <Inbox className="h-3 w-3" /> {from.fullName.split(" ")[0]} · {timeAgo(r.createdAt)}
-                    </p>
-                    <p className="truncate text-[15px] font-semibold">{place?.name ?? collection?.title}</p>
-                    <p className="line-clamp-2 text-[13px] leading-snug text-charcoal/80">“{r.message}”</p>
-                  </div>
-                </Link>
+                  {c ?? "Everywhere"}
+                </button>
               );
             })}
           </div>
-        </section>
-      )}
-
-      {/* A. Friends */}
-      <section className="mt-12">
-        <SectionHeader title="Recommended by your friends" subtitle="Places people you trust rated 4★ and up" href="/friends" />
-        {picks.length ? (
-          <Rail>
-            {picks.map((p) => (
-              <FriendPickCard key={p.place.id} {...p} />
-            ))}
-          </Rail>
-        ) : (
-          <EmptyState
-            icon={Users}
-            title={trusted.size ? "No friend picks here yet" : "Your table is empty"}
-            body={trusted.size ? "Try another city — or be the first to review a place." : "Add friends to see where they love to eat and drink."}
-            action={
-              <Button asChild>
-                <Link href="/friends">Find friends</Link>
-              </Button>
-            }
-          />
-        )}
+        </div>
       </section>
 
-      {/* B. Community */}
-      {popular.length > 0 && (
-        <section className="mt-12">
-          <SectionHeader title="Popular in your community" subtitle="Highest rated by your friends and their friends" href="/map" />
-          <Rail>
-            {popular.map(({ place, count }) => (
-              <PlaceCard key={place.id} place={place} note={<span className="text-muted">{count} {count === 1 ? "rating" : "ratings"} in your network</span>} />
-            ))}
-          </Rail>
-        </section>
-      )}
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
+        {/* Inbox */}
+        {inbox.length > 0 && !city && (
+          <section className="mt-20">
+            <SectionHeader index="Sent to you" title="Personal recommendations" />
+            <div className="grid gap-px overflow-hidden rounded-3xl bg-paper-300 sm:grid-cols-2 lg:grid-cols-3">
+              {inbox.map((r) => {
+                const from = profileById(db, r.senderId);
+                const place = r.placeId ? placeById(db, r.placeId) : null;
+                const collection = r.collectionId ? db.collections.find((c) => c.id === r.collectionId) : null;
+                if (!from || (!place && !collection)) return null;
+                return (
+                  <Link key={r.id} href={place ? `/place/${place.id}` : `/collections/${collection!.id}`} className="group flex gap-4 bg-paper p-5 transition-colors duration-300 hover:bg-white">
+                    <PlaceImage src={place?.imageUrl ?? collection?.coverImage} alt="" category={place?.category} className="h-20 w-20 shrink-0 rounded-2xl" />
+                    <div className="min-w-0">
+                      <p className="flex items-center gap-1.5 text-[12px] text-muted">
+                        <Avatar user={from} size="xs" /> {from.fullName.split(" ")[0]} · {timeAgo(r.createdAt)}
+                      </p>
+                      <p className="mt-1 truncate text-[17px] font-medium tracking-tight">{place?.name ?? collection?.title}</p>
+                      <p className="line-clamp-2 text-[13.5px] leading-snug text-charcoal/75">“{r.message}”</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-      {/* C. Recent */}
-      {recent.length > 0 && (
-        <section className="mt-12">
-          <SectionHeader title="Recently added" subtitle="Fresh reviews and saves from your friends" href="/friends" />
-          <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
-            {recent.map((e) =>
-              e.kind === "review" || e.kind === "save" ? (
-                <Link key={e.id} href={`/place/${e.place.id}`} className="flex items-center gap-3 rounded-2xl p-2 transition hover:bg-white">
-                  <span className="relative shrink-0">
-                    <PlaceImage src={e.place.imageUrl} alt="" category={e.place.category} className="h-16 w-16 rounded-xl" />
-                    <Avatar user={e.actor} size="xs" ring className="absolute -bottom-1 -right-1" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[14.5px] font-semibold">{e.place.name}</span>
-                    <span className="block truncate text-[13px] text-muted">
-                      {e.actor.fullName.split(" ")[0]} {e.kind === "review" ? `rated it ${e.review.overall.toFixed(1)}★` : "saved it"} · {placeSubtitle(e.place)}
-                    </span>
-                  </span>
-                  <span className="shrink-0 text-[12px] text-muted">{timeAgo(e.at)}</span>
-                </Link>
-              ) : null,
-            )}
+        {/* 01 Friends */}
+        <section className="mt-20 lg:mt-28">
+          <SectionHeader index="01 — Your friends" title="Recommended by people you trust" subtitle="Places your friends rated 4★ and up." href="/friends" />
+          {picks.length ? (
+            <Rail>
+              {picks.map((p) => (
+                <FriendPickCard key={p.place.id} {...p} />
+              ))}
+            </Rail>
+          ) : (
+            <EmptyState
+              icon={Users}
+              title={trusted.size ? "No friend picks here yet" : "Your table is empty"}
+              body={trusted.size ? "Try another city — or be the first to review a place." : "Add friends to see where they love to eat and drink."}
+              action={
+                <Button asChild>
+                  <Link href="/friends">Find friends</Link>
+                </Button>
+              }
+            />
+          )}
+        </section>
+      </div>
+
+      {/* 02 Community — dark band */}
+      {popular.length > 0 && (
+        <section className="section-dark mx-2 mt-24 rounded-[2.5rem] px-4 py-16 sm:mx-4 sm:px-8 lg:py-24">
+          <div className="mx-auto max-w-[1440px]">
+            <SectionHeader dark index="02 — Your community" title="Popular in your circle" subtitle="Highest rated by your friends and their friends." href="/map" />
+            <Rail>
+              {popular.map(({ place, count }) => (
+                <PlaceCard key={place.id} place={place} dark note={<span className="text-paper/50">{count} {count === 1 ? "rating" : "ratings"} in your network</span>} />
+              ))}
+            </Rail>
           </div>
         </section>
       )}
 
-      {/* D. Coffee */}
-      {coffee.length > 0 && (
-        <section className="mt-12">
-          <SectionHeader title="Coffee spots worth discovering" subtitle="Specialty coffee and cafés, ranked by your network" />
-          <Rail>
-            {coffee.map(({ p }) => (
-              <PlaceCard key={p.id} place={p} />
-            ))}
-          </Rail>
-        </section>
-      )}
-
-      {/* E. Saved */}
-      <section className="mt-12">
-        <SectionHeader title="Your saved places" subtitle={`${saved.length} ${saved.length === 1 ? "place" : "places"} waiting for you`} href="/profile?tab=saved" />
-        {saved.length ? (
-          <Rail>
-            {saved.map((p) => (
-              <PlaceCard key={p!.id} place={p!} />
-            ))}
-          </Rail>
-        ) : (
-          <EmptyState icon={Bookmark} title="Nothing saved yet" body="Tap the bookmark on any place to keep it for later." />
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
+        {/* 03 Recent */}
+        {recent.length > 0 && (
+          <section className="mt-24">
+            <SectionHeader index="03 — Fresh" title="Recently added" subtitle="New reviews and saves from your friends." href="/friends" />
+            <div className="border-t border-ink/10">
+              {recent.map((e) =>
+                e.kind === "review" || e.kind === "save" ? (
+                  <Link key={e.id} href={`/place/${e.place.id}`} className="group flex items-center gap-4 border-b border-ink/10 py-4 transition-colors duration-300 hover:bg-white/60 sm:px-2">
+                    <span className="relative shrink-0">
+                      <PlaceImage src={e.place.imageUrl} alt="" category={e.place.category} className="h-16 w-16 rounded-2xl" />
+                      <Avatar user={e.actor} size="xs" ring className="absolute -bottom-1 -right-1" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-[18px] font-medium tracking-tight sm:text-[22px]">{e.place.name}</span>
+                      <span className="block truncate text-[13.5px] text-muted">
+                        {e.actor.fullName.split(" ")[0]} {e.kind === "review" ? `rated it ${e.review.overall.toFixed(1)}★` : "saved it"} · {placeSubtitle(e.place)}
+                      </span>
+                    </span>
+                    <span className="hidden shrink-0 text-[13px] text-muted sm:block">{timeAgo(e.at)}</span>
+                    <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-500 group-hover:rotate-45 group-hover:text-accent" />
+                  </Link>
+                ) : null,
+              )}
+            </div>
+          </section>
         )}
-      </section>
 
-      {mode === "demo" && (
-        <p className="mt-16 flex items-center justify-center gap-2 text-center text-[12px] text-muted">
-          <Coffee className="h-3.5 w-3.5" /> Demo mode: places, people and ratings shown are fictional sample data.
-        </p>
-      )}
+        {/* 04 Coffee */}
+        {coffee.length > 0 && (
+          <section className="mt-24">
+            <SectionHeader index="04 — Coffee" title="Coffee spots worth the detour" subtitle="Specialty coffee and cafés, ranked by your network." />
+            <Rail>
+              {coffee.map(({ p }) => (
+                <PlaceCard key={p.id} place={p} />
+              ))}
+            </Rail>
+          </section>
+        )}
+
+        {/* 05 Saved */}
+        <section className="mt-24">
+          <SectionHeader index="05 — Saved" title="Your saved places" subtitle={`${saved.length} ${saved.length === 1 ? "place" : "places"} waiting for you.`} href="/profile?tab=saved" />
+          {saved.length ? (
+            <Rail>
+              {saved.map((p) => (
+                <PlaceCard key={p!.id} place={p!} />
+              ))}
+            </Rail>
+          ) : (
+            <EmptyState icon={Bookmark} title="Nothing saved yet" body="Tap the bookmark on any place to keep it for later." />
+          )}
+        </section>
+
+        {mode === "demo" && <p className="mt-16 text-center text-[12px] text-muted">Demo mode: places, people and ratings shown are fictional sample data.</p>}
+      </div>
     </div>
   );
 }

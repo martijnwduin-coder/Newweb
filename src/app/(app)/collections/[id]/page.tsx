@@ -50,7 +50,7 @@ export default function CollectionPage() {
 
   return (
     <div className="pb-16">
-      <div className="relative h-[42vh] min-h-[300px] overflow-hidden bg-cream-200">
+      <div className="relative h-[42vh] min-h-[300px] overflow-hidden bg-paper-200">
         <PlaceImage src={collectionCover(db, collection)} alt={collection.title} className="h-full w-full" />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex justify-between p-4 sm:p-6">
@@ -97,7 +97,7 @@ export default function CollectionPage() {
               </CollectionEditor>
               <Button
                 variant="ghost"
-                className="text-[#a14b2c]"
+                className="text-[#C2381A]"
                 onClick={() => {
                   if (confirm(`Delete “${collection.title}”?`)) {
                     actions.deleteCollection(collection.id);
@@ -134,13 +134,13 @@ export default function CollectionPage() {
                 }}
                 className={cn("group flex gap-4 rounded-3xl bg-white p-3 shadow-soft transition sm:p-4", dragIndex === i && "opacity-50")}
               >
-                <span className="hidden w-8 shrink-0 pt-1 text-center text-[28px] font-semibold tracking-tight text-sage sm:block">{i + 1}</span>
+                <span className="hidden w-8 shrink-0 pt-1 text-center text-[28px] font-semibold tracking-tight text-stone sm:block">{i + 1}</span>
                 <Link href={`/place/${p!.id}`} className="shrink-0">
                   <PlaceImage src={p!.imageUrl} alt={p!.name} category={p!.category} className="h-24 w-24 rounded-2xl sm:h-32 sm:w-40" />
                 </Link>
                 <div className="min-w-0 flex-1 py-1">
                   <Link href={`/place/${p!.id}`} className="text-[17px] font-semibold tracking-tight hover:underline sm:text-[19px]">
-                    <span className="mr-1.5 text-sage sm:hidden">{i + 1}.</span>
+                    <span className="mr-1.5 text-stone sm:hidden">{i + 1}.</span>
                     {p!.name}
                   </Link>
                   <p className="text-[13px] text-muted">
@@ -154,14 +154,14 @@ export default function CollectionPage() {
                   <SaveButton placeId={p!.id} variant="plain" />
                   {isOwner && (
                     <>
-                      <button onClick={() => move(i, i - 1)} disabled={i === 0} className="rounded-full p-1.5 text-muted hover:bg-cream-200 disabled:opacity-30" aria-label="Move up">
+                      <button onClick={() => move(i, i - 1)} disabled={i === 0} className="rounded-full p-1.5 text-muted hover:bg-paper-200 disabled:opacity-30" aria-label="Move up">
                         <ArrowUp className="h-4 w-4" />
                       </button>
-                      <GripVertical className="hidden h-4 w-4 cursor-grab text-cream-300 sm:block" />
-                      <button onClick={() => move(i, i + 1)} disabled={i === places.length - 1} className="rounded-full p-1.5 text-muted hover:bg-cream-200 disabled:opacity-30" aria-label="Move down">
+                      <GripVertical className="hidden h-4 w-4 cursor-grab text-paper-300 sm:block" />
+                      <button onClick={() => move(i, i + 1)} disabled={i === places.length - 1} className="rounded-full p-1.5 text-muted hover:bg-paper-200 disabled:opacity-30" aria-label="Move down">
                         <ArrowDown className="h-4 w-4" />
                       </button>
-                      <button onClick={() => actions.toggleInCollection(collection.id, p!.id)} className="rounded-full p-1.5 text-muted hover:bg-cream-200" aria-label="Remove from collection">
+                      <button onClick={() => actions.toggleInCollection(collection.id, p!.id)} className="rounded-full p-1.5 text-muted hover:bg-paper-200" aria-label="Remove from collection">
                         <X className="h-4 w-4" />
                       </button>
                     </>
@@ -194,7 +194,7 @@ function AddPlacesDialog({ collectionId, existing }: { collectionId: string; exi
       <DialogContent title="Add places" description="Search the Peloton catalogue.">
         <div className="relative">
           <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, city or cuisine" className="h-11 w-full rounded-xl border border-cream-300 bg-white pl-10 pr-3 focus:outline-none focus:ring-4 focus:ring-sage/25" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, city or cuisine" className="h-11 w-full rounded-xl border border-paper-300 bg-white pl-10 pr-3 focus:outline-none focus:ring-4 focus:ring-stone/25" />
         </div>
         <ul className="mt-3 space-y-1">
           {results.map((p) => {
@@ -209,7 +209,7 @@ function AddPlacesDialog({ collectionId, existing }: { collectionId: string; exi
                       {p.neighborhood}, {p.city}
                     </span>
                   </span>
-                  <span className={cn("rounded-full px-3 py-1 text-[12px] font-medium", has ? "bg-forest text-cream" : "border border-cream-300")}>{has ? "Added" : "Add"}</span>
+                  <span className={cn("rounded-full px-3 py-1 text-[12px] font-medium", has ? "bg-ink text-paper" : "border border-paper-300")}>{has ? "Added" : "Add"}</span>
                 </button>
               </li>
             );

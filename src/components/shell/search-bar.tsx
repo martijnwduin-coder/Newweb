@@ -23,7 +23,7 @@ export function SearchBar({ className, initial = "", large }: { className?: stri
         placeholder="Find your next favorite place..."
         aria-label="Search places"
         className={cn(
-          "w-full rounded-full border border-cream-300 bg-white pl-11 pr-4 text-[15px] shadow-soft transition placeholder:text-muted/80 focus:border-sage focus:outline-none focus:ring-4 focus:ring-sage/25",
+          "w-full rounded-full border border-paper-300 bg-white pl-11 pr-4 text-[15px] shadow-soft transition placeholder:text-muted/80 focus:border-stone focus:outline-none focus:ring-4 focus:ring-stone/25",
           large ? "h-14 text-base" : "h-12",
         )}
       />

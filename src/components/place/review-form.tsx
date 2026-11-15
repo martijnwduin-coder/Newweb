@@ -141,9 +141,9 @@ function ReviewForm({ place, onDone }: { place: Place; onDone: () => void }) {
         <Label>What should people order?</Label>
         <div className="flex flex-wrap gap-2">
           {items.map((i) => (
-            <span key={i} className="inline-flex items-center gap-1 rounded-full bg-forest-50 py-1 pl-3 pr-1.5 text-[13px] text-forest">
+            <span key={i} className="inline-flex items-center gap-1 rounded-full bg-ink-50 py-1 pl-3 pr-1.5 text-[13px] text-ink">
               {i}
-              <button type="button" onClick={() => setItems(items.filter((x) => x !== i))} className="rounded-full p-0.5 hover:bg-sage-100" aria-label={`Remove ${i}`}>
+              <button type="button" onClick={() => setItems(items.filter((x) => x !== i))} className="rounded-full p-0.5 hover:bg-stone-100" aria-label={`Remove ${i}`}>
                 <X className="h-3 w-3" />
               </button>
             </span>
@@ -205,7 +205,7 @@ function ReviewForm({ place, onDone }: { place: Place; onDone: () => void }) {
             </span>
           ))}
           {photos.length < 6 && (
-            <button type="button" onClick={() => fileRef.current?.click()} className="grid h-20 w-20 place-items-center rounded-xl border border-dashed border-cream-300 bg-white text-muted hover:border-sage" aria-label="Add photos">
+            <button type="button" onClick={() => fileRef.current?.click()} className="grid h-20 w-20 place-items-center rounded-xl border border-dashed border-paper-300 bg-white text-muted hover:border-stone" aria-label="Add photos">
               {uploading ? <Loader2 className="h-5 w-5 animate-spin" /> : <ImagePlus className="h-5 w-5" />}
             </button>
           )}
@@ -213,12 +213,12 @@ function ReviewForm({ place, onDone }: { place: Place; onDone: () => void }) {
         </div>
       </div>
 
-      <div className="flex gap-2 border-t border-cream-300/70 pt-5">
+      <div className="flex gap-2 border-t border-paper-300/70 pt-5">
         {existing && (
           <Button
             type="button"
             variant="ghost"
-            className="text-[#a14b2c]"
+            className="text-[#C2381A]"
             onClick={() => {
               if (confirm("Delete your review?")) {
                 onDone();

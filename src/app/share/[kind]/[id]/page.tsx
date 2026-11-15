@@ -142,17 +142,17 @@ export default async function SharePage({ params }: { params: Promise<{ kind: st
   if (!d) notFound();
 
   return (
-    <div className="min-h-dvh bg-cream">
+    <div className="min-h-dvh bg-paper">
       <header className="mx-auto flex max-w-3xl items-center justify-between px-5 py-5">
         <Link href="/">
           <Logo />
         </Link>
-        <Link href={d.appHref} className="rounded-full bg-forest px-4 py-2 text-[13px] font-medium text-cream">
+        <Link href={d.appHref} className="rounded-full bg-ink px-4 py-2 text-[13px] font-medium text-paper">
           Open in Peloton
         </Link>
       </header>
       <main className="mx-auto max-w-3xl px-5 pb-16">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-cream-200 shadow-lift">
+        <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-paper-200 shadow-lift">
           {d.image && (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={d.image} alt={d.title} className="h-full w-full object-cover" />
@@ -167,7 +167,7 @@ export default async function SharePage({ params }: { params: Promise<{ kind: st
         </div>
         {d.rating != null && (
           <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[15px] font-semibold shadow-soft">
-            <Star className="h-4 w-4 fill-terracotta text-terracotta" /> {d.rating.toFixed(1)}
+            <Star className="h-4 w-4 fill-accent text-accent" /> {d.rating.toFixed(1)}
             <span className="font-normal text-muted">
               {d.quote ? "their rating" : `Peloton community · ${d.ratingCount} ${d.ratingCount === 1 ? "review" : "reviews"}`}
             </span>
@@ -182,7 +182,7 @@ export default async function SharePage({ params }: { params: Promise<{ kind: st
           <ol className="mt-8 space-y-3">
             {d.places.map((p, i) => (
               <li key={p.name + i} className="flex items-center gap-4 rounded-2xl bg-white p-3 shadow-soft">
-                <span className="w-6 text-center text-xl font-semibold text-sage">{i + 1}</span>
+                <span className="w-6 text-center text-xl font-semibold text-stone">{i + 1}</span>
                 {p.image && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={p.image} alt="" className="h-16 w-16 rounded-xl object-cover" />
@@ -195,10 +195,10 @@ export default async function SharePage({ params }: { params: Promise<{ kind: st
             ))}
           </ol>
         )}
-        <div className="mt-10 rounded-3xl bg-forest p-8 text-cream">
+        <div className="mt-10 rounded-3xl bg-ink p-8 text-paper">
           <p className="display text-[28px]">Good places. Better connections.</p>
-          <p className="mt-2 text-cream/70">Peloton AI is where friends share the places worth going to.</p>
-          <Link href={d.appHref} className="mt-6 inline-flex items-center gap-2 rounded-full bg-cream px-5 py-3 text-[14px] font-medium text-forest">
+          <p className="mt-2 text-paper/70">Peloton AI is where friends share the places worth going to.</p>
+          <Link href={d.appHref} className="mt-6 inline-flex items-center gap-2 rounded-full bg-paper px-5 py-3 text-[14px] font-medium text-ink">
             See it on Peloton <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

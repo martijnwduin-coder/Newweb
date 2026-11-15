@@ -74,7 +74,7 @@ export default function PlacePage() {
   return (
     <div className="pb-16">
       {/* Cover */}
-      <div className="relative h-[46vh] min-h-[320px] w-full overflow-hidden bg-cream-200 lg:h-[420px]">
+      <div className="relative h-[46vh] min-h-[320px] w-full overflow-hidden bg-paper-200 lg:h-[420px]">
         <PlaceImage src={place.imageUrl} alt={place.name} category={place.category} className="h-full w-full" />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/20 to-charcoal/10" />
         <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4 sm:p-6">
@@ -130,7 +130,7 @@ export default function PlacePage() {
               {stats.friendRating != null && (
                 <div>
                   <p className="text-[12px] font-semibold uppercase tracking-wider text-muted">Friends&apos; average</p>
-                  <p className="mt-1 text-[34px] font-semibold tracking-tight text-terracotta">{formatRating(stats.friendRating)}</p>
+                  <p className="mt-1 text-[34px] font-semibold tracking-tight text-accent">{formatRating(stats.friendRating)}</p>
                   <p className="text-[13px] text-muted">from {stats.friendCount} {stats.friendCount === 1 ? "person" : "people"} you trust</p>
                 </div>
               )}
@@ -174,15 +174,15 @@ export default function PlacePage() {
                       <span>{label}</span>
                       <span className="font-semibold tabular-nums">{formatRating(v)}</span>
                     </div>
-                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-cream-200">
-                      <div className="h-full rounded-full bg-forest transition-all duration-700" style={{ width: `${((v ?? 0) / 5) * 100}%` }} />
+                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-paper-200">
+                      <div className="h-full rounded-full bg-ink transition-all duration-700" style={{ width: `${((v ?? 0) / 5) * 100}%` }} />
                     </div>
                   </div>
                 ))}
                 {stats.topTags.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pt-2 sm:col-span-2">
                     {stats.topTags.map((t) => (
-                      <span key={t.tag} className="rounded-full bg-cream-200 px-2.5 py-1 text-[12px] capitalize text-charcoal">
+                      <span key={t.tag} className="rounded-full bg-paper-200 px-2.5 py-1 text-[12px] capitalize text-charcoal">
                         {t.tag} <span className="text-muted">· {t.count}</span>
                       </span>
                     ))}
@@ -244,13 +244,13 @@ export default function PlacePage() {
         {/* Sidebar */}
         <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
           {stats.topItems.length > 0 && (
-            <div className="rounded-3xl bg-forest p-6 text-cream shadow-lift">
-              <p className="text-[12px] font-semibold uppercase tracking-wider text-sage">Recommended to order</p>
+            <div className="rounded-3xl bg-ink p-6 text-paper shadow-lift">
+              <p className="text-[12px] font-semibold uppercase tracking-wider text-stone">Recommended to order</p>
               <ul className="mt-3 space-y-2">
                 {stats.topItems.map((i) => (
                   <li key={i.item} className="flex items-center justify-between gap-3 text-[15px]">
                     <span>{i.item}</span>
-                    <span className="text-[12px] text-cream/60">
+                    <span className="text-[12px] text-paper/60">
                       {i.count} {i.count === 1 ? "mention" : "mentions"}
                     </span>
                   </li>
@@ -261,7 +261,7 @@ export default function PlacePage() {
           <div className="space-y-4 rounded-3xl bg-white p-6 shadow-soft">
             <InfoRow icon={MapPin} label="Address">
               {place.address}
-              <a href={directionsUrl(place)} target="_blank" rel="noreferrer" className="mt-1 flex items-center gap-1 font-medium text-forest hover:underline">
+              <a href={directionsUrl(place)} target="_blank" rel="noreferrer" className="mt-1 flex items-center gap-1 font-medium text-ink hover:underline">
                 <Navigation className="h-3.5 w-3.5" /> Directions in Google Maps
               </a>
             </InfoRow>
@@ -276,19 +276,19 @@ export default function PlacePage() {
             ) : null}
             {place.website && (
               <InfoRow icon={Globe} label="Website">
-                <a href={place.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 break-all font-medium text-forest hover:underline">
+                <a href={place.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 break-all font-medium text-ink hover:underline">
                   {place.website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")} <ExternalLink className="h-3 w-3" />
                 </a>
               </InfoRow>
             )}
             {place.phone && (
               <InfoRow icon={Phone} label="Phone">
-                <a href={`tel:${place.phone}`} className="font-medium text-forest">
+                <a href={`tel:${place.phone}`} className="font-medium text-ink">
                   {place.phone}
                 </a>
               </InfoRow>
             )}
-            {place.source === "demo" && <p className="border-t border-cream-200 pt-3 text-[12px] text-muted">This is a fictional demo venue. Hours and address are illustrative.</p>}
+            {place.source === "demo" && <p className="border-t border-paper-200 pt-3 text-[12px] text-muted">This is a fictional demo venue. Hours and address are illustrative.</p>}
           </div>
           <Button asChild variant="outline" className="w-full">
             <Link href={`/map?place=${place.id}&city=${encodeURIComponent(place.city)}`}>

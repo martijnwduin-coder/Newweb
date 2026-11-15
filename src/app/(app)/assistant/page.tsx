@@ -117,14 +117,14 @@ export default function AssistantPage() {
       {turns.length === 0 ? (
         <div className="animate-fade-up">
           <AppIcon className="h-14 w-14 shadow-lift" />
-          <h1 className="display mt-6 text-[38px] text-forest sm:text-[48px]">
-            Ask Peloton<span className="text-terracotta">.</span>
+          <h1 className="display mt-6 text-[38px] text-ink sm:text-[48px]">
+            Ask Peloton<span className="text-accent">.</span>
           </h1>
           <p className="mt-3 max-w-lg text-[16px] text-muted">
             Describe the evening you want. I&apos;ll search places your friends rated, saved and recommended — then your wider community.
           </p>
           <div className="mt-6 flex items-start gap-3 rounded-2xl bg-white/70 p-4 text-[13px] text-charcoal/80">
-            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-forest" />
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-ink" />
             <p>
               Answers only use real data in Peloton: reviews, ratings and saves from people{me ? ` ${me.fullName.split(" ")[0]} trusts` : ""}. Nothing is made up. Your taste profile:{" "}
               <b className="font-semibold">{taste.title}</b>
@@ -133,7 +133,7 @@ export default function AssistantPage() {
           </div>
           <div className="mt-8 grid gap-2 sm:grid-cols-2">
             {SUGGESTIONS.map((s) => (
-              <button key={s} onClick={() => ask(s)} className="rounded-2xl border border-cream-300 bg-white p-4 text-left text-[14px] leading-snug text-charcoal shadow-soft transition hover:border-sage hover:shadow-lift">
+              <button key={s} onClick={() => ask(s)} className="rounded-2xl border border-paper-300 bg-white p-4 text-left text-[14px] leading-snug text-charcoal shadow-soft transition hover:border-stone hover:shadow-lift">
                 {s}
               </button>
             ))}
@@ -144,7 +144,7 @@ export default function AssistantPage() {
           {turns.map((t) => (
             <div key={t.id} className="animate-fade-up space-y-4">
               <div className="flex justify-end">
-                <p className="max-w-[85%] rounded-3xl rounded-br-lg bg-forest px-4 py-3 text-[15px] text-cream">{t.query}</p>
+                <p className="max-w-[85%] rounded-3xl rounded-br-lg bg-ink px-4 py-3 text-[15px] text-paper">{t.query}</p>
               </div>
               {t.status === "thinking" ? (
                 <p className="flex items-center gap-2 text-[14px] text-muted">
@@ -186,11 +186,11 @@ export default function AssistantPage() {
           e.preventDefault();
           ask(input);
         }}
-        className="fixed inset-x-0 bottom-16 z-30 bg-gradient-to-t from-cream via-cream to-transparent px-4 pb-4 pt-8 lg:bottom-0 lg:left-[248px]"
+        className="fixed inset-x-0 bottom-16 z-30 bg-gradient-to-t from-paper via-paper to-transparent px-4 pb-4 pt-8 lg:bottom-0 lg:left-0"
       >
-        <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-full border border-cream-300 bg-white p-1.5 pl-5 shadow-lift focus-within:ring-4 focus-within:ring-sage/25">
+        <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-full border border-paper-300 bg-white p-1.5 pl-5 shadow-lift focus-within:ring-4 focus-within:ring-stone/25">
           <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="A cosy natural wine bar in Copenhagen…" className="h-11 flex-1 bg-transparent text-[15px] focus:outline-none" aria-label="Ask Peloton" />
-          <button type="submit" disabled={!input.trim() || busy} className="grid h-11 w-11 place-items-center rounded-full bg-forest text-cream transition disabled:opacity-40" aria-label="Send">
+          <button type="submit" disabled={!input.trim() || busy} className="grid h-11 w-11 place-items-center rounded-full bg-ink text-paper transition disabled:opacity-40" aria-label="Send">
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowUp className="h-4 w-4" />}
           </button>
         </div>
@@ -224,11 +224,11 @@ function PickCard({ c, why, rank }: { c: Candidate; why?: string; rank: number }
           <p className="mt-1.5 text-[13.5px] leading-snug text-charcoal/85">{why ?? c.facts[0]}</p>
         </div>
       </div>
-      <button onClick={() => setOpen((v) => !v)} className={cn("flex w-full items-center gap-1.5 border-t border-cream-200 px-4 py-2 text-left text-[12px] font-medium text-forest", open && "bg-cream/50")}>
+      <button onClick={() => setOpen((v) => !v)} className={cn("flex w-full items-center gap-1.5 border-t border-paper-200 px-4 py-2 text-left text-[12px] font-medium text-ink", open && "bg-paper/50")}>
         <ShieldCheck className="h-3.5 w-3.5" /> {open ? "Hide" : "Why this?"} · {c.facts.length} verified {c.facts.length === 1 ? "signal" : "signals"}
       </button>
       {open && (
-        <ul className="space-y-1 bg-cream/50 px-4 pb-3 text-[12.5px] text-charcoal/80">
+        <ul className="space-y-1 bg-paper/50 px-4 pb-3 text-[12.5px] text-charcoal/80">
           {c.facts.map((f) => (
             <li key={f}>· {f}</li>
           ))}

@@ -20,14 +20,14 @@ export function DialogContent({
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-charcoal/40 backdrop-blur-[2px] data-[state=open]:animate-[fade-up_0.2s_ease]" />
       <DialogPrimitive.Content
         className={cn(
-          "fixed z-50 flex max-h-[92dvh] w-full flex-col overflow-hidden bg-cream shadow-lift focus:outline-none",
+          "fixed z-50 flex max-h-[92dvh] w-full flex-col overflow-hidden bg-paper shadow-lift focus:outline-none",
           "inset-x-0 bottom-0 rounded-t-3xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-3xl",
           "data-[state=open]:animate-scale-in",
           className,
         )}
         {...props}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-cream-300/70 px-6 pb-4 pt-5">
+        <div className="flex items-start justify-between gap-4 border-b border-paper-300/70 px-6 pb-4 pt-5">
           <div>
             <DialogPrimitive.Title className="text-lg font-semibold tracking-tight text-charcoal">{title}</DialogPrimitive.Title>
             {description ? (
@@ -36,7 +36,7 @@ export function DialogContent({
               <DialogPrimitive.Description className="sr-only">{title}</DialogPrimitive.Description>
             )}
           </div>
-          <DialogPrimitive.Close className="-mr-2 rounded-full p-2 text-muted transition hover:bg-cream-200 hover:text-charcoal" aria-label="Close">
+          <DialogPrimitive.Close className="-mr-2 rounded-full p-2 text-muted transition hover:bg-paper-200 hover:text-charcoal" aria-label="Close">
             <X className="h-4 w-4" />
           </DialogPrimitive.Close>
         </div>

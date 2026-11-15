@@ -12,13 +12,13 @@ export function ActivityItem({ event }: { event: ActivityEvent }) {
   const { db } = useStore();
   if (event.kind === "city_saves") {
     return (
-      <Link href={`/map?city=${encodeURIComponent(event.city)}&filter=friends`} className="flex items-center gap-4 rounded-3xl bg-forest p-5 text-cream shadow-lift transition hover:bg-forest-700">
+      <Link href={`/map?city=${encodeURIComponent(event.city)}&filter=friends`} className="flex items-center gap-4 rounded-3xl bg-ink p-5 text-paper shadow-lift transition hover:bg-ink-700">
         <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white/10">
-          <MapPin className="h-5 w-5 text-terracotta" />
+          <MapPin className="h-5 w-5 text-accent" />
         </span>
         <span className="flex-1">
           <span className="block text-[15px] font-semibold">Your friends have saved {event.count} places in {event.city}</span>
-          <span className="mt-1 flex items-center gap-2 text-[13px] text-cream/70">
+          <span className="mt-1 flex items-center gap-2 text-[13px] text-paper/70">
             <AvatarStack users={event.actors} max={4} /> See them on the map
           </span>
         </span>
@@ -48,7 +48,7 @@ export function ActivityItem({ event }: { event: ActivityEvent }) {
         <Link href={href} className="font-semibold hover:underline">
           {event.place.name}
         </Link>{" "}
-        <span className="whitespace-nowrap font-semibold text-terracotta">{event.review.overall.toFixed(1)}★</span>
+        <span className="whitespace-nowrap font-semibold text-accent">{event.review.overall.toFixed(1)}★</span>
       </>
     );
     body = event.review.text ? <p className="mt-1.5 line-clamp-3 text-[14px] leading-snug text-charcoal/80">“{event.review.text}”</p> : null;
@@ -84,7 +84,7 @@ export function ActivityItem({ event }: { event: ActivityEvent }) {
     <article className="flex gap-3 rounded-3xl bg-white p-4 shadow-soft">
       <Link href={`/u/${actor.username}`} className="relative shrink-0">
         <Avatar user={actor} size="md" />
-        <span className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-cream text-forest ring-2 ring-white">
+        <span className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full bg-paper text-ink ring-2 ring-white">
           <Icon className="h-3 w-3" />
         </span>
       </Link>

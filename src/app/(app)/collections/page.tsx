@@ -28,19 +28,19 @@ export default function CollectionsPage() {
   );
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-6 sm:px-8 lg:pt-10">
+    <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-6 sm:px-8 lg:pt-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="display text-[38px] text-forest sm:text-[48px]">Collections</h1>
+          <h1 className="display text-[38px] text-ink sm:text-[48px]">Collections</h1>
           <p className="mt-2 max-w-xl text-[15px] text-muted">Curated lists for every mood, city and occasion — yours and your friends&apos;.</p>
         </div>
         {create}
       </header>
 
       <section className="mt-10">
-        <SectionHeader title="Your collections" />
+        <SectionHeader index="01 — Yours" title="Your collections" />
         {mine.length ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mag-grid grid gap-6 sm:grid-cols-2">
             {mine.map((c) => (
               <CollectionCard key={c.id} collection={c} />
             ))}
@@ -52,8 +52,8 @@ export default function CollectionsPage() {
 
       {followed.length > 0 && (
         <section className="mt-14">
-          <SectionHeader title="Following" subtitle="Lists you've followed" />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <SectionHeader index="02 — Following" title="Lists you follow" />
+          <div className="mag-grid grid gap-6 sm:grid-cols-2">
             {followed.map((c) => (
               <CollectionCard key={c.id} collection={c} />
             ))}
@@ -63,8 +63,8 @@ export default function CollectionsPage() {
 
       {fromFriends.length > 0 && (
         <section className="mt-14">
-          <SectionHeader title="From your friends" />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <SectionHeader index="03 — Friends" title="From your friends" />
+          <div className="mag-grid grid gap-6 sm:grid-cols-2">
             {fromFriends.map((c) => (
               <CollectionCard key={c.id} collection={c} />
             ))}
@@ -74,8 +74,8 @@ export default function CollectionsPage() {
 
       {discover.length > 0 && (
         <section className="mt-14">
-          <SectionHeader title="Discover public collections" subtitle="From curators across the Peloton community" />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <SectionHeader index="04 — Discover" title="Public collections" subtitle="From curators across the Peloton community." />
+          <div className="mag-grid grid gap-6 sm:grid-cols-2">
             {discover.map((c) => (
               <CollectionCard key={c.id} collection={c} />
             ))}

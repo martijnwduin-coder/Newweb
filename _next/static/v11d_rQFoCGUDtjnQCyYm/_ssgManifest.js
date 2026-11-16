@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fcollections\u002F[id]","\u002Fplace\u002F[id]","\u002Fu\u002F[username]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

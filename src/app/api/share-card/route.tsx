@@ -1,3 +1,4 @@
+import { rateLimit, tooMany } from "@/lib/rate-limit";
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
@@ -33,6 +34,8 @@ function Chair({ size, color }: { size: number; color: string }) {
 }
 
 export async function GET(req: Request) {
+  const limited = rateLimit(req, "share-card", 60);
+  if (!limited.ok) return tooMany(limited.retryAfter);
   const { searchParams } = new URL(req.url);
   const title = (searchParams.get("title") ?? "Peloton AI").slice(0, 80);
   const subtitle = (searchParams.get("subtitle") ?? "").slice(0, 120);
@@ -76,7 +79,7 @@ export async function GET(req: Request) {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: big ? 48 : 24 }}>
             {rating ? (
               <div style={{ display: "flex", alignItems: "center", gap: 14, background: "#1A1A19", color: "#F8F8F7", borderRadius: 999, padding: big ? "18px 32px" : "12px 24px", fontSize: big ? 40 : 28 }}>
-                <span style={{ color: "#F5A524" }}>★</span> {rating} <span style={{ opacity: 0.7, fontSize: big ? 28 : 20 }}>{label}</span>
+                <svg width={big ? 34 : 24} height={big ? 34 : 24} viewBox="0 0 24 24"><path fill="#F5A524" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.5 1.3 6.6L12 17.3l-5.9 3.2 1.3-6.6L2.5 9.4l6.6-.8z" /></svg> {rating} <span style={{ opacity: 0.7, fontSize: big ? 28 : 20 }}>{label}</span>
               </div>
             ) : (
               <div style={{ display: "flex" }} />

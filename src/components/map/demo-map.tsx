@@ -2,6 +2,8 @@
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { MapMarker } from "./types";
+import { ClusterPin } from "./cluster-pin";
+import { clusterPoints } from "./cluster";
 import { MarkerPin } from "./marker-pin";
 
 /**
@@ -105,7 +107,31 @@ export function DemoMap({ markers, center, selectedId, hoverId, onSelect }: { ma
         </g>
       </svg>
 
-      {markers.map((m) => {
+      {clusterPoints(markers, project, 46, (m) => m.id === selectedId).map((c) => {
+        if (c.type === "cluster") {
+          const p = project(c.lat, c.lng);
+          if (p.x < -60 || p.y < -60 || p.x > size.w + 60 || p.y > size.h + 60) return null;
+          return (
+            <button
+              key={c.id}
+              className="absolute -translate-x-1/2 -translate-y-1/2"
+              style={{ left: p.x, top: p.y, zIndex: 15 }}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={() => {
+                // Zoom in around the cluster.
+                setView((v) => {
+                  const zoom = Math.min(6, v.zoom * 2);
+                  const k = zoom / v.zoom;
+                  return { zoom, x: (v.x - (p.x - size.w / 2)) * k + 0, y: (v.y - (p.y - size.h / 2)) * k };
+                });
+              }}
+              aria-label={`${c.items.length} places — zoom in`}
+            >
+              <ClusterPin count={c.items.length} friend={c.items.some((i) => i.friend)} />
+            </button>
+          );
+        }
+        const m = c.item;
         const p = project(m.lat, m.lng);
         if (p.x < -60 || p.y < -60 || p.x > size.w + 60 || p.y > size.h + 60) return null;
         const active = m.id === selectedId || m.id === hoverId;

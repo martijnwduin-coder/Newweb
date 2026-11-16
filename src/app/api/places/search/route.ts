@@ -1,7 +1,10 @@
+import { rateLimit, tooMany } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { isGooglePlacesConfigured, searchGooglePlaces } from "@/lib/places/google";
 
 export async function GET(req: Request) {
+  const limited = rateLimit(req, "places-search", 30);
+  if (!limited.ok) return tooMany(limited.retryAfter);
   const { searchParams } = new URL(req.url);
   const q = searchParams.get("q")?.trim();
   if (!q) return NextResponse.json({ error: "Missing q" }, { status: 400 });

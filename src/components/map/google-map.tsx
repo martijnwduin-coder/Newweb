@@ -1,6 +1,8 @@
 "use client";
 import { AdvancedMarker, APIProvider, Map, useMap } from "@vis.gl/react-google-maps";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ClusterPin } from "./cluster-pin";
+import { clusterPoints, mercator } from "./cluster";
 import { config } from "@/lib/config";
 import type { MapMarker } from "./types";
 import { MarkerPin } from "./marker-pin";
@@ -61,15 +63,48 @@ export function GoogleMapView({
       >
         <CameraController center={center} selected={markers.find((m) => m.id === selectedId)} />
         <BoundsReporter onIdle={onCenterChange} />
-        {markers.map((m) => {
-          const active = m.id === selectedId || m.id === hoverId;
-          return (
-            <AdvancedMarker key={m.id} position={{ lat: m.lat, lng: m.lng }} onClick={() => onSelect(m.id)} zIndex={active ? 30 : m.friend ? 20 : 10} title={m.name}>
-              <MarkerPin {...m} active={active} />
-            </AdvancedMarker>
-          );
-        })}
+        <ClusteredMarkers markers={markers} selectedId={selectedId} hoverId={hoverId} onSelect={onSelect} />
       </Map>
     </APIProvider>
+  );
+}
+
+function ClusteredMarkers({ markers, selectedId, hoverId, onSelect }: { markers: MapMarker[]; selectedId: string | null; hoverId: string | null; onSelect: (id: string | null) => void }) {
+  const map = useMap();
+  const [zoom, setZoom] = useState(14);
+  useEffect(() => {
+    if (!map) return;
+    const l = map.addListener("zoom_changed", () => setZoom(map.getZoom() ?? 14));
+    setZoom(map.getZoom() ?? 14);
+    return () => l.remove();
+  }, [map]);
+  const groups = clusterPoints(markers, mercator(zoom), 46, (m) => m.id === selectedId);
+  return (
+    <>
+      {groups.map((c) => {
+        if (c.type === "cluster")
+          return (
+            <AdvancedMarker
+              key={c.id}
+              position={{ lat: c.lat, lng: c.lng }}
+              zIndex={15}
+              title={`${c.items.length} places`}
+              onClick={() => {
+                map?.panTo({ lat: c.lat, lng: c.lng });
+                map?.setZoom(zoom + 2);
+              }}
+            >
+              <ClusterPin count={c.items.length} friend={c.items.some((i) => i.friend)} />
+            </AdvancedMarker>
+          );
+        const m = c.item;
+        const active = m.id === selectedId || m.id === hoverId;
+        return (
+          <AdvancedMarker key={m.id} position={{ lat: m.lat, lng: m.lng }} onClick={() => onSelect(m.id)} zIndex={active ? 30 : m.friend ? 20 : 10} title={m.name}>
+            <MarkerPin {...m} active={active} />
+          </AdvancedMarker>
+        );
+      })}
+    </>
   );
 }

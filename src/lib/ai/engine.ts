@@ -74,6 +74,8 @@ const TAG_WORDS: [RegExp, ReviewTag][] = [
   [/great coffee|best coffee|specialty coffee/, "great coffee"],
 ];
 
+const EVENING_TAGS: ReviewTag[] = ["date night", "late night", "casual dinner", "natural wine"];
+
 export function parseIntent(query: string, db: Database): ParsedIntent {
   const q = query.toLowerCase();
   const categories = [...new Set(CATEGORY_WORDS.filter(([re]) => re.test(q)).flatMap(([, c]) => c))];
@@ -146,6 +148,8 @@ function rank(
     if (intent.city && p.city !== intent.city) continue;
     if (intent.neighborhood && p.neighborhood !== intent.neighborhood) continue;
     if (intent.categories.length && !intent.categories.includes(p.category)) continue;
+    // Evening plans (date night, late night, dinner) are restaurants and bars unless asked otherwise.
+    if (!intent.categories.length && intent.tags.some((t) => EVENING_TAGS.includes(t)) && !["restaurant", "bar"].includes(p.category)) continue;
     const cuisineHay = `${p.cuisine ?? ""} ${p.name} ${p.description ?? ""}`.toLowerCase();
     if (intent.cuisines.length && !intent.cuisines.some((c) => cuisineHay.includes(c))) continue;
     if (intent.maxPrice && (p.priceLevel ?? 2) > intent.maxPrice) continue;

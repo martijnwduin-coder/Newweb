@@ -41,6 +41,7 @@ function useStoreValue() {
       setDb(res.db);
       setMeId(res.meId);
       setLoadError(null);
+      return res.db;
     } catch (e) {
       setLoadError(e instanceof Error ? e.message : "Could not load data");
     } finally {
@@ -51,6 +52,25 @@ function useStoreValue() {
   useEffect(() => {
     reload();
   }, [reload]);
+
+  // Live mode: refresh when something arrives for me (debounced), and tell the user.
+  useEffect(() => {
+    if (!ready || !meId || !backend.subscribe) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const unsubscribe = backend.subscribe(meId, (kind) => {
+      clearTimeout(timer);
+      timer = setTimeout(async () => {
+        const before = dbRef.current.notifications.filter((n) => n.userId === meId && !n.isRead).length;
+        const fresh = await reload();
+        const after = (fresh ?? dbRef.current).notifications.filter((n) => n.userId === meId && !n.isRead).length;
+        if (kind !== "friendship" && after > before) toast("You have a new notification", { action: { label: "View", onClick: () => (window.location.href = "/notifications") } });
+      }, 400);
+    });
+    return () => {
+      clearTimeout(timer);
+      unsubscribe();
+    };
+  }, [ready, meId, backend, reload]);
 
   // Demo mode persists the whole snapshot locally after every change.
   useEffect(() => {

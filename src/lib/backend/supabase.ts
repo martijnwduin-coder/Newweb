@@ -321,6 +321,29 @@ export const supabaseBackend: Backend = {
     must(await getSupabaseBrowser().from("profiles").update(fromProfile(p)).eq("id", p.id));
   },
 
+  subscribe(meId, onChange) {
+    const sb = getSupabaseBrowser();
+    let channel: ReturnType<typeof sb.channel> | null = null;
+    let cancelled = false;
+    (async () => {
+      // Realtime checks RLS with the user's token: make sure it has it before joining.
+      const { data } = await sb.auth.getSession();
+      if (data.session) await sb.realtime.setAuth(data.session.access_token);
+      if (cancelled) return;
+      channel = sb
+        .channel(`peloton-live-${meId}`)
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "notifications", filter: `user_id=eq.${meId}` }, () => onChange("notification"))
+        .on("postgres_changes", { event: "*", schema: "public", table: "friendships", filter: `addressee_id=eq.${meId}` }, () => onChange("friendship"))
+        .on("postgres_changes", { event: "*", schema: "public", table: "friendships", filter: `requester_id=eq.${meId}` }, () => onChange("friendship"))
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "place_recommendations", filter: `receiver_id=eq.${meId}` }, () => onChange("recommendation"))
+        .subscribe();
+    })();
+    return () => {
+      cancelled = true;
+      if (channel) sb.removeChannel(channel);
+    };
+  },
+
   async signOut() {
     await getSupabaseBrowser().auth.signOut();
   },

@@ -1,3 +1,4 @@
+import { rateLimit, tooMany } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Anthropic, isLLMConfigured, narrate } from "@/lib/ai/llm";
@@ -32,6 +33,8 @@ const Body = z.object({
  * the client keeps the engine's template answer.
  */
 export async function POST(req: Request) {
+  const limited = rateLimit(req, "ai", 12);
+  if (!limited.ok) return tooMany(limited.retryAfter);
   let body: z.infer<typeof Body>;
   try {
     body = Body.parse(await req.json());

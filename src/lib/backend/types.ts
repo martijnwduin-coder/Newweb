@@ -36,5 +36,7 @@ export interface Backend {
   markNotificationsRead(ids: string[]): Promise<void>;
   updateProfile(p: Profile): Promise<void>;
   persist?(db: Database): void;
+  /** Live updates for the signed-in user. Returns an unsubscribe function. */
+  subscribe?(meId: string, onChange: (kind: "notification" | "friendship" | "recommendation") => void): () => void;
   signOut?(): Promise<void>;
 }

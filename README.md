@@ -88,6 +88,21 @@ The tables are `profiles` (the spec's `users`, keyed to `auth.users`), `places`,
 
 Notifications are written by database triggers. RLS uses the `can_view(owner, visibility)` helper to apply public / friends / private visibility.
 
+## Tests
+
+```bash
+npm test            # unit tests (recommendation engine, privacy rules, clustering, rate limiting)
+npm run test:e2e    # browser tests; live-mode suite if .env.local points at Supabase, demo-mode suite otherwise
+```
+
+GitHub Actions (`.github/workflows/ci.yml`) runs lint, type-check, unit tests, the production build and the demo-mode browser tests on every push.
+
+## Live updates & protection
+
+- **Realtime:** new notifications, friend requests and recommendations arrive without a refresh, through Supabase Realtime (migration `0002_realtime.sql`).
+- **Rate limits** per IP on the paid endpoints: AI assistant 12/min, Places search 30/min, photos 150/min, share cards 60/min. The limiter is in-memory, so each server instance keeps its own count. Use Redis or Upstash for a global limit.
+- **Security headers** are set in `next.config.ts`. Anti-framing and HSTS apply only on Vercel, or when `PELOTON_STRICT_HEADERS=1`.
+
 ## Deploy
 
 Push to GitHub, import the repo in Vercel, add the env vars and set `NEXT_PUBLIC_SITE_URL` to your production URL.

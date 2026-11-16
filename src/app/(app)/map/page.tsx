@@ -86,7 +86,7 @@ function MapExplorer() {
         if (friendsOnly && s.recommenders.length === 0 && s.savedByFriends.length === 0) return false;
         if (savedOnly && !isSaved(db, meId, p.id)) return false;
         if (qNoCity) {
-          const hay = [p.name, p.cuisine, p.neighborhood, p.city, CATEGORY_META[p.category].label, p.address, ...s.topTags.map((t) => t.tag), ...s.topItems.map((i) => i.item)]
+          const hay = [p.name, p.cuisine, p.neighborhood, p.city, CATEGORY_META[p.category].label, p.address, p.description, ...s.topTags.map((t) => t.tag), ...s.topItems.map((i) => i.item)]
             .join(" ")
             .toLowerCase();
           if (!qNoCity.split(/\s+/).every((w) => hay.includes(w))) return false;

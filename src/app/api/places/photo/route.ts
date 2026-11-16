@@ -1,7 +1,10 @@
+import { rateLimit, tooMany } from "@/lib/rate-limit";
 import { NextResponse } from "next/server";
 
 /** Proxies Google Places photos so the API key stays server-side. */
 export async function GET(req: Request) {
+  const limited = rateLimit(req, "places-photo", 150);
+  if (!limited.ok) return tooMany(limited.retryAfter);
   const name = new URL(req.url).searchParams.get("name");
   const key = process.env.GOOGLE_PLACES_API_KEY;
   if (!name || !key || !/^places\/[\w-]+\/photos\/[\w-]+$/.test(name)) return new NextResponse(null, { status: 404 });

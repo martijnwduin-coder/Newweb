@@ -93,7 +93,9 @@ export function directionsUrl(p: { lat: number; lng: number; googlePlaceId?: str
   return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
 
+/** Absolute URL of the site root, including any base path (e.g. GitHub Pages sub-folder). */
 export function siteOrigin() {
-  if (typeof window !== "undefined") return window.location.origin;
-  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  if (typeof window !== "undefined") return window.location.origin + base;
+  return (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000") + base;
 }

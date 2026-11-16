@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { appMode } from "../config";
+import { appMode, basePath } from "../config";
 import { demoBackend } from "../backend/demo";
 import { supabaseBackend } from "../backend/supabase";
 import type { Backend } from "../backend/types";
@@ -63,7 +63,7 @@ function useStoreValue() {
         const before = dbRef.current.notifications.filter((n) => n.userId === meId && !n.isRead).length;
         const fresh = await reload();
         const after = (fresh ?? dbRef.current).notifications.filter((n) => n.userId === meId && !n.isRead).length;
-        if (kind !== "friendship" && after > before) toast("You have a new notification", { action: { label: "View", onClick: () => (window.location.href = "/notifications") } });
+        if (kind !== "friendship" && after > before) toast("You have a new notification", { action: { label: "View", onClick: () => (window.location.href = `${basePath}/notifications`) } });
       }, 400);
     });
     return () => {
@@ -327,7 +327,7 @@ function useStoreValue() {
 
     async signOut() {
       await backend.signOut?.();
-      window.location.href = "/login";
+      window.location.href = `${basePath}/login`;
     },
   };
 

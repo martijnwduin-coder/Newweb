@@ -10,6 +10,7 @@ import { SaveButton } from "@/components/place/save-button";
 import { AppIcon } from "@/components/brand/logo";
 import { profileSummary, recommend, templateAnswer, type Candidate } from "@/lib/ai/engine";
 import { tasteProfile } from "@/lib/selectors";
+import { isStaticSite } from "@/lib/config";
 import { useStore } from "@/lib/store/store";
 import { CATEGORY_META, cn, priceLabel } from "@/lib/utils";
 
@@ -81,7 +82,7 @@ function Assistant() {
       note: relaxed ?? (wantsLocation && !location ? "Location wasn't available, so I searched your whole network instead." : undefined),
     };
 
-    try {
+    if (!isStaticSite) try {
       const shortlist = candidates.slice(0, Math.max(intent.count * 2, 8));
       const res = await fetch("/api/ai/discover", {
         method: "POST",

@@ -14,7 +14,7 @@ import { SaveButton } from "@/components/place/save-button";
 import { AvatarStack } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
-import { isGoogleMapsConfigured } from "@/lib/config";
+import { isGoogleMapsConfigured, isStaticSite } from "@/lib/config";
 import { cities, isSaved, placeStats } from "@/lib/selectors";
 import { useStore } from "@/lib/store/store";
 import type { Category, Place } from "@/lib/types";
@@ -99,6 +99,7 @@ function MapExplorer() {
   const searchGoogle = useCallback(async () => {
     const q = query.trim();
     if (!q) return;
+    if (isStaticSite) return setGoogleState("unconfigured");
     setGoogleState("loading");
     const c = mapCenter ?? userLoc ?? cityCenter;
     try {

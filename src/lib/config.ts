@@ -16,3 +16,9 @@ export const isSupabaseConfigured = Boolean(config.supabaseUrl && config.supabas
 export const isGoogleMapsConfigured = Boolean(config.googleMapsBrowserKey);
 
 export const appMode: "demo" | "live" = isSupabaseConfigured ? "live" : "demo";
+
+/** Static build (GitHub Pages): no server, so no API routes, auth or share pages. */
+export const isStaticSite = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
+
+/** Path prefix when hosted in a sub-folder, e.g. "/Newweb" on GitHub Pages. */
+export const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";

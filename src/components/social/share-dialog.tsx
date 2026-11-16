@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/input";
 import { friendIds, profileById } from "@/lib/selectors";
 import { useStore } from "@/lib/store/store";
 import type { Profile } from "@/lib/types";
+import { isStaticSite } from "@/lib/config";
 import { cn, siteOrigin } from "@/lib/utils";
 
 export interface ShareTarget {
@@ -24,7 +25,12 @@ export interface ShareTarget {
   defaultMessage?: string;
 }
 
-export function shareUrl(t: Pick<ShareTarget, "kind" | "id">) {
+export function shareUrl(t: Pick<ShareTarget, "kind" | "id" | "placeId">) {
+  // A static site has no server-rendered /share pages: link straight to the page instead.
+  if (isStaticSite) {
+    const path = t.kind === "collection" ? `collections/${t.id}` : `place/${t.placeId ?? t.id}`;
+    return `${siteOrigin()}/${path}/`;
+  }
   return `${siteOrigin()}/share/${t.kind}/${encodeURIComponent(t.id)}`;
 }
 
@@ -133,7 +139,7 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
       {/* Anywhere */}
       <section>
         <h3 className="mb-3 text-[13px] font-semibold uppercase tracking-wider text-muted">Share anywhere</h3>
-        <div className="grid grid-cols-4 gap-2">
+        <div className={cn("grid gap-2", isStaticSite ? "grid-cols-3" : "grid-cols-4")}>
           <ShareAction icon={copied ? Check : Link2} label={copied ? "Copied" : "Copy link"} onClick={copy} />
           <ShareAction
             icon={MessageCircle}
@@ -142,7 +148,7 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
             className="text-[#1f9d55]"
           />
           <ShareAction icon={Share2} label="More" onClick={nativeShare} disabled={!canNativeShare} />
-          <ShareAction icon={Download} label="Story card" href={shareCardUrl(target, "story")} download={`peloton-${target.id}.png`} />
+          {!isStaticSite && <ShareAction icon={Download} label="Story card" href={shareCardUrl(target, "story")} download={`peloton-${target.id}.png`} />}
         </div>
         <div className="mt-3 flex items-center gap-2 rounded-xl border border-paper-300 bg-white px-3 py-2">
           <span className="flex-1 truncate text-[13px] text-muted">{url}</span>
@@ -152,7 +158,8 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
         </div>
       </section>
 
-      {/* Card preview */}
+      {/* Card preview (needs the server-side image route) */}
+      {!isStaticSite && (
       <section>
         <h3 className="mb-3 text-[13px] font-semibold uppercase tracking-wider text-muted">Instagram-ready card</h3>
         <div className="flex justify-center rounded-2xl bg-paper-200 p-4">
@@ -160,6 +167,7 @@ function ShareBody({ target, onDone }: { target: ShareTarget; onDone: () => void
           <img src={shareCardUrl(target, "story")} alt="Share card preview" className="h-72 rounded-xl shadow-lift" />
         </div>
       </section>
+      )}
     </div>
   );
 }

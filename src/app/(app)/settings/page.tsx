@@ -7,6 +7,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { resetDemoData } from "@/lib/backend/demo";
+import { basePath } from "@/lib/config";
 import { useStore } from "@/lib/store/store";
 import type { PrivacySettings, Visibility } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -121,7 +122,7 @@ export default function SettingsPage() {
               onClick={() => {
                 if (confirm("Reset all demo data to its original state?")) {
                   resetDemoData();
-                  location.href = "/";
+                  location.href = `${basePath}/`;
                 }
               }}
             >

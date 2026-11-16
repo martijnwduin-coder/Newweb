@@ -103,6 +103,17 @@ GitHub Actions (`.github/workflows/ci.yml`) runs lint, type-check, unit tests, t
 - **Rate limits** per IP on the paid endpoints: AI assistant 12/min, Places search 30/min, photos 150/min, share cards 60/min. The limiter is in-memory, so each server instance keeps its own count. Use Redis or Upstash for a global limit.
 - **Security headers** are set in `next.config.ts`. Anti-framing and HSTS apply only on Vercel, or when `PELOTON_STRICT_HEADERS=1`.
 
+## Free hosting on GitHub Pages (no Vercel account)
+
+`.github/workflows/pages.yml` publishes a static copy of the site to the `gh-pages` branch on every push to `main`. The site is at `https://<owner>.github.io/<repo>/`. To build it yourself, run `NEXT_PUBLIC_BASE_PATH=/<repo> npm run build:static`; the output goes to `out/`.
+
+GitHub Pages can't run server code, so this copy runs in demo mode in each visitor's browser:
+- Real logins and the shared database are off.
+- Claude-written answers are off; the built-in recommendation engine still answers.
+- Google place search and the share-card images are off.
+
+For all features, deploy to Vercel instead (below).
+
 ## Deploy
 
 Push to GitHub, import the repo in Vercel, add the env vars and set `NEXT_PUBLIC_SITE_URL` to your production URL.

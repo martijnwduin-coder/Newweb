@@ -12,7 +12,33 @@ cp .env.example .env.local   # optional: leave blank for demo mode
 npm run dev                  # http://localhost:3000
 ```
 
-If no keys are set, the app runs in **demo mode**. All people, places and reviews in it are fictional sample data, marked with "Demo" badges, and your changes are saved in your browser's localStorage. You can reset the demo from the sidebar or from Settings.
+If no keys are set, the app runs in **demo mode**. All people, places and reviews in it are fictional sample data, marked with "Demo" badges, and your changes are saved in your browser's localStorage. You can reset the demo from the footer or from Settings.
+
+## Run the full stack locally (frontend + backend)
+
+The backend is Supabase (Postgres, Auth, REST, Storage). The CLI runs it locally in Docker:
+
+```bash
+npm run db:start        # starts Postgres/Auth/REST/Storage, applies supabase/migrations
+npx supabase status -o env   # shows API_URL, ANON_KEY, SERVICE_ROLE_KEY
+```
+
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<ANON_KEY from supabase status>
+```
+
+Seed the demo people, places and reviews (fictional), then start the app:
+
+```bash
+SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=<SERVICE_ROLE_KEY> npm run db:seed
+npm run build && npm start
+```
+
+Sign in as `alex@peloton.demo` / `peloton-demo` (every demo person has an account: `emma@`, `thomas@`, `sarah@`…). `npm run db:reset` wipes and re-migrates; run the seed again afterwards. `npm run db:stop` stops the containers.
 
 ## Connect real services
 

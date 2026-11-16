@@ -281,11 +281,12 @@ export const supabaseBackend: Backend = {
   },
 
   async upsertFriendship(f) {
-    must(
-      await getSupabaseBrowser()
-        .from("friendships")
-        .upsert({ id: f.id, requester_id: f.requesterId, addressee_id: f.addresseeId, status: f.status }),
-    );
+    const t = () => getSupabaseBrowser().from("friendships");
+    // Status changes (accept/decline) must be UPDATEs: an upsert would also be checked
+    // against the INSERT policy, which only the requester satisfies.
+    const updated = must(await t().update({ status: f.status }).eq("id", f.id).select("id"));
+    if (updated.length) return;
+    must(await t().insert({ id: f.id, requester_id: f.requesterId, addressee_id: f.addresseeId, status: f.status }));
   },
 
   async deleteFriendship(id) {

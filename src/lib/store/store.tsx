@@ -231,7 +231,11 @@ function useStoreValue() {
           friendships: d.friendships.map((x) => (x.id === f.id ? next : x)),
           notifications: d.notifications.map((n) => (n.referenceId === f.id ? { ...n, isRead: true } : n)),
         }),
-        () => backend.upsertFriendship(next),
+        async () => {
+          await backend.upsertFriendship(next);
+          const noteIds = dbRef.current.notifications.filter((n) => n.referenceId === f.id && !n.isRead).map((n) => n.id);
+          await backend.markNotificationsRead(noteIds);
+        },
         accept ? "You're now friends" : "Request declined",
       );
     },

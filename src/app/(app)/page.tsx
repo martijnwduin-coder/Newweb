@@ -1,17 +1,25 @@
 "use client";
-import { ArrowUpRight, Bookmark, Users } from "lucide-react";
+import { ArrowRight, Bookmark, Coffee, Gem, Heart, Map as MapIcon, Sunrise, Users } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { PlaceImage } from "@/components/place/place-image";
 import { FriendPickCard, PlaceCard, placeSubtitle } from "@/components/place/place-card";
-import { SearchBar } from "@/components/shell/search-bar";
+import { AskBox } from "@/components/shell/ask-box";
 import { Avatar } from "@/components/ui/avatar";
-import { ArrowButton } from "@/components/ui/arrow-button";
 import { Button } from "@/components/ui/button";
 import { EmptyState, Rail, SectionHeader } from "@/components/ui/rail";
 import { activityFeed, cities, communityFavourites, friendPicks, placeById, placeStats, profileById, trustedIds } from "@/lib/selectors";
 import { useStore } from "@/lib/store/store";
-import { cn, greeting, timeAgo } from "@/lib/utils";
+import { cn, timeAgo } from "@/lib/utils";
+
+const QUICK = [
+  { label: "Coffee near me", q: "Where should I get coffee near me?", icon: Coffee },
+  { label: "Date night", q: "Give me five great date-night restaurants.", icon: Heart },
+  { label: "Friends' picks", q: "Find places my friends recommend in Amsterdam", icon: Users, isNew: true },
+  { label: "Hidden gems", q: "Hidden gems my friends love", icon: Gem },
+  { label: "Brunch", q: "Best brunch spots recommended by friends", icon: Sunrise },
+  { label: "Map", q: null, icon: MapIcon },
+];
 
 export default function DiscoverPage() {
   const { db, meId, me, mode } = useStore();
@@ -52,23 +60,28 @@ export default function DiscoverPage() {
 
   return (
     <div>
-      {/* Hero — full-bleed dark, oversized light type */}
-      <section className="section-dark relative overflow-hidden px-4 pb-16 pt-14 sm:px-8 lg:pb-24 lg:pt-24">
-        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full bg-accent/20 blur-[120px]" />
-        <div className="relative mx-auto max-w-[1440px] animate-fade-up">
-          <p className="eyebrow text-paper/50">
-            {[firstName ? `Hi ${firstName}` : null, new Date().toLocaleDateString("en-GB", { weekday: "long" }), me?.location].filter(Boolean).join("  ·  ")}
+      {/* Hero — centered serif question + ask box */}
+      <section className="px-4 pb-6 pt-20 sm:px-8 sm:pt-28">
+        <div className="mx-auto max-w-[768px] animate-fade-up text-center">
+          <p className="text-[14px] text-muted">
+            {[firstName ? `Hi ${firstName}` : null, new Date().toLocaleDateString("en-GB", { weekday: "long" }), me?.location].filter(Boolean).join(" · ")}
           </p>
-          <h1 className="display mt-6 max-w-[14ch] text-[52px] sm:text-[88px] lg:text-[128px]">
-            {greeting()}. Where should we <span className="text-accent">go?</span>
-          </h1>
-          <div className="mt-10 flex flex-col gap-4 lg:mt-14 lg:flex-row lg:items-center">
-            <SearchBar className="w-full lg:max-w-xl" large />
-            <ArrowButton href="/assistant" className="self-start lg:self-auto">
-              Ask Peloton
-            </ArrowButton>
+          <h1 className="display mt-3 text-[32px] sm:text-[40px]">Where should we go?</h1>
+          <AskBox className="mt-8 text-left" />
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {QUICK.map(({ label, q, icon: Icon, isNew }) => (
+              <Link
+                key={label}
+                href={q ? `/assistant?q=${encodeURIComponent(q)}` : "/map"}
+                className="inline-flex h-10 items-center gap-2 rounded-full border border-black/[0.08] bg-transparent px-4 text-[14.5px] text-ink transition-colors hover:bg-white"
+              >
+                {Icon && <Icon className="h-4 w-4 text-ink/70" />}
+                {label}
+                {isNew && <span className="rounded-md bg-accent-50 px-1.5 text-[13px] text-accent">New</span>}
+              </Link>
+            ))}
           </div>
-          <div className="no-scrollbar -mx-4 mt-8 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+          <div className="no-scrollbar mx-auto mt-10 flex justify-center gap-1 overflow-x-auto">
             {[null, ...cityList].map((c) => {
               const active = city === c;
               return (
@@ -76,10 +89,7 @@ export default function DiscoverPage() {
                   key={c ?? "all"}
                   onClick={() => setCity(c === city ? null : c)}
                   aria-pressed={active}
-                  className={cn(
-                    "h-10 shrink-0 rounded-full border px-5 text-[14px] transition-colors duration-300",
-                    active ? "border-paper bg-paper text-ink" : "border-white/20 text-paper/80 hover:border-white/60",
-                  )}
+                  className={cn("h-8 shrink-0 rounded-lg px-3 text-[14px] transition-colors", active ? "bg-ink text-white" : "text-[#4d4d4d] hover:bg-paper-200")}
                 >
                   {c ?? "Everywhere"}
                 </button>
@@ -89,7 +99,7 @@ export default function DiscoverPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
         {/* Inbox */}
         {inbox.length > 0 && !city && (
           <section className="mt-20">
@@ -118,8 +128,8 @@ export default function DiscoverPage() {
         )}
 
         {/* 01 Friends */}
-        <section className="mt-20 lg:mt-28">
-          <SectionHeader index="01 — Your friends" title="Recommended by people you trust" subtitle="Places your friends rated 4★ and up." href="/friends" />
+        <section className="mt-20">
+          <SectionHeader index="Your friends" title="Recommended by people you trust" subtitle="Places your friends rated 4★ and up." href="/friends" />
           {picks.length ? (
             <Rail>
               {picks.map((p) => (
@@ -143,23 +153,23 @@ export default function DiscoverPage() {
 
       {/* 02 Community — dark band */}
       {popular.length > 0 && (
-        <section className="section-dark mx-2 mt-24 rounded-[2.5rem] px-4 py-16 sm:mx-4 sm:px-8 lg:py-24">
-          <div className="mx-auto max-w-[1440px]">
-            <SectionHeader dark index="02 — Your community" title="Popular in your circle" subtitle="Highest rated by your friends and their friends." href="/map" />
+        <section className="mt-20 px-4 sm:px-8">
+          <div className="mx-auto max-w-[1200px]">
+            <SectionHeader index="Your community" title="Popular in your circle" subtitle="Highest rated by your friends and their friends." href="/map" />
             <Rail>
               {popular.map(({ place, count }) => (
-                <PlaceCard key={place.id} place={place} dark note={<span className="text-paper/50">{count} {count === 1 ? "rating" : "ratings"} in your network</span>} />
+                <PlaceCard key={place.id} place={place} note={<span className="text-muted">{count} {count === 1 ? "rating" : "ratings"} in your network</span>} />
               ))}
             </Rail>
           </div>
         </section>
       )}
 
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-8">
         {/* 03 Recent */}
         {recent.length > 0 && (
-          <section className="mt-24">
-            <SectionHeader index="03 — Fresh" title="Recently added" subtitle="New reviews and saves from your friends." href="/friends" />
+          <section className="mt-20">
+            <SectionHeader index="Fresh" title="Recently added" subtitle="New reviews and saves from your friends." href="/friends" />
             <div className="border-t border-ink/10">
               {recent.map((e) =>
                 e.kind === "review" || e.kind === "save" ? (
@@ -169,13 +179,13 @@ export default function DiscoverPage() {
                       <Avatar user={e.actor} size="xs" ring className="absolute -bottom-1 -right-1" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[18px] font-medium tracking-tight sm:text-[22px]">{e.place.name}</span>
+                      <span className="block truncate text-[16px] font-medium">{e.place.name}</span>
                       <span className="block truncate text-[13.5px] text-muted">
                         {e.actor.fullName.split(" ")[0]} {e.kind === "review" ? `rated it ${e.review.overall.toFixed(1)}★` : "saved it"} · {placeSubtitle(e.place)}
                       </span>
                     </span>
                     <span className="hidden shrink-0 text-[13px] text-muted sm:block">{timeAgo(e.at)}</span>
-                    <ArrowUpRight className="h-5 w-5 shrink-0 text-muted transition-all duration-500 group-hover:rotate-45 group-hover:text-accent" />
+                    <ArrowRight className="h-4 w-4 shrink-0 text-muted transition-all duration-500 group-hover:translate-x-0.5 group-hover:text-ink" />
                   </Link>
                 ) : null,
               )}
@@ -185,8 +195,8 @@ export default function DiscoverPage() {
 
         {/* 04 Coffee */}
         {coffee.length > 0 && (
-          <section className="mt-24">
-            <SectionHeader index="04 — Coffee" title="Coffee spots worth the detour" subtitle="Specialty coffee and cafés, ranked by your network." />
+          <section className="mt-20">
+            <SectionHeader index="Coffee" title="Coffee spots worth the detour" subtitle="Specialty coffee and cafés, ranked by your network." />
             <Rail>
               {coffee.map(({ p }) => (
                 <PlaceCard key={p.id} place={p} />
@@ -196,8 +206,8 @@ export default function DiscoverPage() {
         )}
 
         {/* 05 Saved */}
-        <section className="mt-24">
-          <SectionHeader index="05 — Saved" title="Your saved places" subtitle={`${saved.length} ${saved.length === 1 ? "place" : "places"} waiting for you.`} href="/profile?tab=saved" />
+        <section className="mt-20">
+          <SectionHeader index="Saved" title="Your saved places" subtitle={`${saved.length} ${saved.length === 1 ? "place" : "places"} waiting for you.`} href="/profile?tab=saved" />
           {saved.length ? (
             <Rail>
               {saved.map((p) => (

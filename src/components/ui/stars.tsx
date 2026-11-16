@@ -13,7 +13,7 @@ export function Stars({ value, size = 14, className }: { value: number; size?: n
           <span key={i} className="relative inline-block" style={{ width: size, height: size }}>
             <Star className="absolute inset-0 text-paper-300" style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
             <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
-              <Star className="text-accent" style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
+              <Star className="text-star" style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
             </span>
           </span>
         );
@@ -35,7 +35,7 @@ export function StarInput({ value, onChange, size = 32, label }: { value: number
             <span key={i} className="relative" style={{ width: size + 4, height: size }}>
               <Star className="absolute left-0.5 top-0 text-paper-300" style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
               <span className="absolute left-0.5 top-0 overflow-hidden transition-[width]" style={{ width: fill * size }}>
-                <Star className="text-accent" style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
+                <Star className="text-star" style={{ width: size, height: size }} fill="currentColor" strokeWidth={0} />
               </span>
               {[i - 0.5, i].map((v, half) => (
                 <button

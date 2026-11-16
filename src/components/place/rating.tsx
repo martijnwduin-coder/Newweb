@@ -7,7 +7,7 @@ export function PelotonRating({ rating, count, className, size = "md" }: { ratin
     return <span className={cn("text-[12px] text-muted", className)}>No Peloton reviews yet</span>;
   return (
     <span className={cn("inline-flex items-center gap-1 font-semibold text-charcoal", size === "sm" ? "text-[12px]" : "text-[13px]", className)} title="Peloton community rating">
-      <Star className={cn("fill-accent text-accent", size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5")} />
+      <Star className={cn("fill-star text-star", size === "sm" ? "h-3 w-3" : "h-3.5 w-3.5")} />
       {formatRating(rating)}
       <span className="font-normal text-muted">({count})</span>
     </span>

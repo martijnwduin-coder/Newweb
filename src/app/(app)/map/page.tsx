@@ -327,13 +327,13 @@ function MapExplorer() {
   );
 
   return (
-    <div className="fixed inset-x-0 bottom-16 top-0 lg:relative lg:bottom-auto lg:grid lg:h-[calc(100dvh-72px)] lg:grid-cols-[440px_1fr] lg:grid-rows-[minmax(0,1fr)]">
+    <div className="fixed inset-x-0 bottom-16 top-0 lg:relative lg:bottom-auto lg:grid lg:h-[calc(100dvh-56px)] lg:grid-cols-[440px_1fr] lg:grid-rows-[minmax(0,1fr)]">
       {/* Sidebar / list */}
       <section className={cn("flex h-full min-h-0 flex-col bg-paper lg:border-r lg:border-paper-300/70", view === "map" ? "max-lg:hidden" : "max-lg:pt-[150px]")}>
         <div className="hidden space-y-4 px-5 pb-4 pt-8 lg:block">
           <div>
-            <p className="eyebrow text-accent">Explore</p>
-            <h1 className="display mt-1 text-[44px]">{city}</h1>
+            <p className="eyebrow text-muted">Explore</p>
+            <h1 className="display mt-0.5 text-[32px]">{city}</h1>
             <p className="text-[14px] text-muted">
               {results.length} Peloton {results.length === 1 ? "place" : "places"}
               {friendsOnly ? " your friends love" : ""}

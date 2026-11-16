@@ -1,5 +1,5 @@
 "use client";
-import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -22,25 +22,16 @@ export function SectionHeader({
   dark?: boolean;
 }) {
   return (
-    <div className={cn("mb-8 flex items-end justify-between gap-6", className)}>
+    <div className={cn("mb-6 flex items-end justify-between gap-6", className)}>
       <div className="min-w-0">
-        {index && <p className={cn("eyebrow mb-3", dark ? "text-accent" : "text-accent")}>{index}</p>}
-        <h2 className={cn("display text-[32px] sm:text-[44px] lg:text-[52px]", dark ? "text-paper" : "text-ink")}>{title}</h2>
-        {subtitle && <p className={cn("mt-2 max-w-xl text-[15px]", dark ? "text-paper/60" : "text-muted")}>{subtitle}</p>}
+        {index && <p className={cn("eyebrow mb-1.5", dark ? "text-white/50" : "text-muted")}>{index}</p>}
+        <h2 className={cn("display text-[24px] sm:text-[28px]", dark ? "text-white" : "text-ink")}>{title}</h2>
+        {subtitle && <p className={cn("mt-1 max-w-xl text-[15px]", dark ? "text-white/60" : "text-muted")}>{subtitle}</p>}
       </div>
       {action}
       {href && (
-        <Link
-          href={href}
-          className={cn(
-            "group hidden shrink-0 items-center gap-2 rounded-full border py-2 pl-4 pr-2 text-[13.5px] font-medium transition-colors duration-300 sm:inline-flex",
-            dark ? "border-white/20 text-paper hover:border-white/50" : "border-ink/15 text-ink hover:border-ink/40",
-          )}
-        >
-          See all
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-accent text-ink transition-transform duration-500 group-hover:rotate-45">
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </span>
+        <Link href={href} className="group inline-flex shrink-0 items-center gap-1 text-[14px] font-medium text-ink hover:underline">
+          See all <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>

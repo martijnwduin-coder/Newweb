@@ -23,14 +23,15 @@ export function AppIcon({ className, inverted = false }: { className?: string; i
   );
 }
 
+/** Wordmark: line chair + serif "peloton". */
 export function Logo({ className, compact = false, tone = "dark" }: { className?: string; compact?: boolean; tone?: "dark" | "light" }) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5 select-none", className)} aria-label="Peloton AI">
-      <AppIcon className="h-8 w-8" inverted={tone === "light"} />
+    <span className={cn("inline-flex items-center gap-1.5 select-none", tone === "dark" ? "text-ink" : "text-white", className)} aria-label="Peloton AI">
+      <ChairMark className="h-7 w-7" strokeWidth={2.2} />
       {!compact && (
-        <span className={cn("flex items-baseline gap-1 text-[15px] font-semibold tracking-[0.22em]", tone === "dark" ? "text-ink" : "text-paper")}>
-          PELOTON
-          <span className="text-[10px] font-semibold tracking-[0.12em] text-accent">AI</span>
+        <span className="flex items-baseline gap-1">
+          <span className="font-[family-name:var(--font-display)] text-[20px] font-bold tracking-tight">peloton</span>
+          <span className="text-[11px] font-semibold text-accent">ai</span>
         </span>
       )}
     </span>

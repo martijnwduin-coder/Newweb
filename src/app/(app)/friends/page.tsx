@@ -47,7 +47,7 @@ export default function FriendsPage() {
   return (
     <div className="mx-auto max-w-[1440px] px-4 pb-16 pt-6 sm:px-8 lg:pt-10">
       <header className="animate-fade-up">
-        <h1 className="display text-[38px] text-ink sm:text-[48px]">Your table</h1>
+        <h1 className="display text-[32px] text-ink sm:text-[40px]">Your table</h1>
         <p className="mt-2 max-w-xl text-[15px] text-muted">Where your friends are eating, drinking and saving. Recommendations from people, not algorithms.</p>
       </header>
 

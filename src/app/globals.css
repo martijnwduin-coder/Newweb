@@ -1,30 +1,31 @@
 @import "tailwindcss";
 
-/* Peloton AI design tokens — editorial agency style:
-   ink + off-white sections, one vivid orange accent, oversized light headlines. */
+/* Peloton AI design tokens — calm, AI-first style:
+   warm off-white canvas, near-black ink, a serif for headlines, one blue accent. */
 @theme {
-  --color-ink: #0f0f0e;
+  --color-ink: #1a1a19;
   --color-ink-700: #000000;
-  --color-ink-50: #e9e7e1;
-  --color-paper: #f2f0eb;
-  --color-paper-200: #e8e5de;
-  --color-paper-300: #d9d5cc;
-  --color-charcoal: #161616;
-  --color-stone: #a9a49a;
-  --color-stone-100: #e2dfd8;
-  --color-accent: #ff5c28;
-  --color-accent-50: #ffe6dc;
-  --color-muted: #6e6b66;
+  --color-ink-50: #ededeb;
+  --color-paper: #f8f8f7;
+  --color-paper-200: #f0f0ee;
+  --color-paper-300: #e5e5e2;
+  --color-charcoal: #1a1a1a;
+  --color-stone: #a3a3a0;
+  --color-stone-100: #ececea;
+  --color-accent: #0081f2;
+  --color-accent-50: #e5f2fe;
+  --color-star: #f5a524;
+  --color-muted: #737373;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, sans-serif;
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-display: var(--font-serif), Georgia, Cambria, "Times New Roman", serif;
 
   --radius-xl: 1rem;
   --radius-2xl: 1.25rem;
-  --radius-3xl: 1.75rem;
+  --radius-3xl: 1.25rem;
 
-  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.03), 0 6px 20px -8px rgb(0 0 0 / 0.10);
-  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.04), 0 24px 48px -16px rgb(0 0 0 / 0.28);
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 14px -6px rgb(0 0 0 / 0.06);
+  --shadow-lift: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.14);
 
   --animate-fade-up: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-scale-in: scale-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
@@ -62,25 +63,24 @@ body {
 }
 
 ::selection {
-  background: var(--color-sage);
-  color: var(--color-forest);
+  background: var(--color-accent-50);
+  color: var(--color-ink);
 }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 
-/* Oversized, light display type */
+/* Serif display type */
 .display {
   font-family: var(--font-display);
-  letter-spacing: -0.045em;
-  line-height: 0.96;
-  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  font-weight: 400;
 }
 .eyebrow {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 /* Dark editorial section */

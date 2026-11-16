@@ -4,6 +4,24 @@
 
 Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui-style components (Radix + CVA) · Lucide · Supabase (Postgres, Auth, Storage, RLS) · Google Maps JS + Places API (New) · Anthropic Claude.
 
+## Quick start (website + backend on your computer)
+
+You need **Node.js 20+** and **Docker Desktop**, and Docker Desktop must be running.
+
+```bash
+npm install
+npm run db:start      # first run downloads the database images (a few minutes)
+npm run db:seed       # adds the fictional demo people, places and reviews
+npm run build
+npm start
+```
+
+Open http://localhost:3000 and sign in with **alex@peloton.demo / peloton-demo**.
+
+The included `.env.local` points the app at this local backend. If you delete it, the app runs in demo mode in the browser, without Docker.
+
+To stop the backend, run `npm run db:stop`.
+
 ## Run locally
 
 ```bash

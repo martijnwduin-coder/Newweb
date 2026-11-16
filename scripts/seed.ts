@@ -5,14 +5,24 @@
  * and inserts places, reviews, friendships, follows, collections, saves and recommendations.
  * Safe to re-run: existing demo users are reused and rows are upserted.
  */
+import { execSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { createDemoDatabase } from "../src/lib/demo/seed";
 
-const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// With no env vars set, read the keys from the local Supabase stack (npm run db:start).
+function localStatus(): { API_URL?: string; SERVICE_ROLE_KEY?: string } {
+  try {
+    return JSON.parse(execSync("npx supabase status -o json", { stdio: ["ignore", "pipe", "ignore"] }).toString());
+  } catch {
+    return {};
+  }
+}
+const local = process.env.SUPABASE_SERVICE_ROLE_KEY ? {} : localStatus();
+const url = process.env.SUPABASE_URL ?? local.API_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
+const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? local.SERVICE_ROLE_KEY;
 const password = process.env.DEMO_PASSWORD ?? "peloton-demo";
-if (!url || !key) throw new Error("Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
+if (!url || !key) throw new Error("Start the backend first (npm run db:start), or set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
 
 const sb = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 const db = createDemoDatabase();

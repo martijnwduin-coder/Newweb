@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>{{ subject }}</title>
+</head>
+{%- macro price(r) -%}
+  <span style="font-size:16px;font-weight:700;color:#0a0a0a">{{ r.price | money(r.currency) }}</span>
+  {%- if r.original_price %} <span style="color:#8a8a8a;text-decoration:line-through;font-size:13px">{{ r.original_price | money(r.currency) }}</span>{% endif %}
+  {%- if r.currency != 'EUR' %}<br><span style="color:#6b6b6b;font-size:12px">≈ {{ r.price_eur | money }} (ECB rate)</span>{% endif %}
+{%- endmacro -%}
+{%- macro badge(r) -%}
+  {%- set bg = '#16a34a' if r.discount_pct >= 50 else ('#22c55e' if r.discount_pct >= 40 else ('#f97316' if r.discount_pct >= 30 else ('#0a0a0a' if r.discount_pct >= 10 else '#9ca3af'))) -%}
+  <span style="display:inline-block;background:{{ bg }};color:#fff;font-weight:700;font-size:13px;padding:3px 8px;border-radius:6px">-{{ '%.0f' % r.discount_pct }}%</span>
+{%- endmacro -%}
+{%- macro deal(r, rank=None) -%}
+<tr>
+  <td style="padding:12px 0;border-bottom:1px solid #ececec;vertical-align:top;width:88px">
+    {%- if r.image_url %}<img src="{{ r.image_url }}" width="76" height="76" alt="" style="display:block;border-radius:8px;object-fit:cover;background:#f4f4f5">
+    {%- else %}<div style="width:76px;height:76px;border-radius:8px;background:#f4f4f5;color:#a1a1aa;font-size:11px;line-height:76px;text-align:center">no image</div>{% endif %}
+  </td>
+  <td style="padding:12px 0 12px 12px;border-bottom:1px solid #ececec;vertical-align:top;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.04em">
+      {% if rank %}#{{ rank }} · {% endif %}{{ r.franchise.name if r.franchise else (r.subcategory or r.category)|title }} · {{ FLAGS.get(r.country,'') }} {{ r.country }}
+      {%- if r.watched %} · <span style="color:#f97316">★ watchlist</span>{% endif %}
+      {%- if r.is_cheapest %} · <span style="color:#16a34a">cheapest of {{ r.country_count }} countries</span>{% endif %}
+    </div>
+    <div style="font-size:15px;font-weight:600;color:#0a0a0a;margin:2px 0">{{ r.model or r.name }}</div>
+    <div style="font-size:13px;color:#3f3f46">{{ r.colourway or '' }}</div>
+    <div style="margin:6px 0">{{ badge(r) }} &nbsp;{{ price(r) }}</div>
+    <div style="font-size:12px;color:#6b6b6b">Sizes: {{ r.sizes | join(', ') if r.sizes else 'not listed' }}</div>
+    <div style="margin-top:6px"><a href="{{ r.url }}" style="color:#0a0a0a;font-weight:600;font-size:13px">View on Zalando {{ r.country }} →</a></div>
+  </td>
+</tr>
+{%- endmacro -%}
+<body style="margin:0;padding:0;background:#f4f4f5">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5">
+<tr><td align="center" style="padding:24px 12px">
+<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="max-width:640px;width:100%;background:#ffffff;border-radius:14px;overflow:hidden">
+  <tr><td style="background:#0a0a0a;padding:28px 28px 24px;font-family:Helvetica,Arial,sans-serif">
+    <div style="color:#f97316;font-size:12px;font-weight:700;letter-spacing:.14em">NIKE DEAL TRACKER</div>
+    <div style="color:#fff;font-size:24px;font-weight:700;margin-top:6px">Weekly Zalando Deals</div>
+    <div style="color:#a1a1aa;font-size:13px;margin-top:4px">{{ date }} · NL · DE · FR · ES · PL</div>
+  </td></tr>
+  {% if sample %}
+  <tr><td style="background:#fef3c7;color:#92400e;padding:12px 28px;font:600 13px Helvetica,Arial,sans-serif">
+    SAMPLE DATA — this report was generated from fictional test data, not from Zalando. Do not act on these prices.
+  </td></tr>
+  {% endif %}
+  <tr><td style="padding:24px 28px 8px;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">A · WEEKLY OVERVIEW</div>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px">
+      <tr>
+        {% for label, value in [('Products monitored', overview.monitored), ('Discounted', overview.discounted), ('New deals', overview.new_deals), ('30%+ off', overview.strong)] %}
+        <td style="width:25%;padding:10px;background:#fafafa;border:1px solid #f0f0f0;border-radius:10px;text-align:center">
+          <div style="font-size:22px;font-weight:700;color:#0a0a0a">{{ value }}</div>
+          <div style="font-size:11px;color:#6b6b6b">{{ label }}</div>
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+    {% if overview.best %}
+    <p style="font-size:14px;color:#27272a;margin:14px 0 0">Best discount of the week: <b>{{ overview.best.model or overview.best.name }}</b> ({{ overview.best.colourway }}) — <b>-{{ '%.0f' % overview.best.discount_pct }}%</b> in {{ COUNTRY_NAMES.get(overview.best.country) }} at {{ overview.best.price | money(overview.best.currency) }}.</p>
+    {% endif %}
+    {% if baseline %}<p style="font-size:12px;color:#6b6b6b;margin:10px 0 0">This is a baseline scan: price drops and "new deal" detection start from the next scan.</p>{% endif %}
+    {% if scan_results %}
+    <p style="font-size:12px;color:#6b6b6b;margin:10px 0 0">Scan #{{ scan.id }}:
+      {% for s in scan_results %}{{ s.country }} {{ '✓' if s.status == 'success' else ('◐' if s.status == 'partial' else '✕ ' ~ s.status) }}{% if not loop.last %} · {% endif %}{% endfor %}
+    </p>
+    {% endif %}
+  </td></tr>
+
+  <tr><td style="padding:20px 28px 0;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">B · TOP {{ top|length if top else 20 }} BEST DEALS</div>
+    {% if top %}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{% for r in top %}{{ deal(r, loop.index) }}{% endfor %}</table>
+    {% else %}
+    <p style="font-size:14px;color:#27272a">No significant deals this week: no in-stock Nike product reached {{ min_discount }}% off in any of the five countries.</p>
+    {% endif %}
+  </td></tr>
+
+  <tr><td style="padding:24px 28px 0;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">C · AIR FORCE 1 SPECIAL REPORT</div>
+    {% if af1 %}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">{% for r in af1 %}{{ deal(r) }}{% endfor %}</table>
+    {% else %}<p style="font-size:14px;color:#27272a">No discounted Air Force 1 found this week.</p>{% endif %}
+  </td></tr>
+
+  <tr><td style="padding:24px 28px 0;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">D · OTHER PRIORITY FRANCHISES</div>
+    {% for f in priority %}
+      <div style="font-size:15px;font-weight:700;color:#0a0a0a;margin:16px 0 0">{{ f.name }}</div>
+      {% if f.deals %}<table role="presentation" width="100%" cellpadding="0" cellspacing="0">{% for r in f.deals %}{{ deal(r) }}{% endfor %}</table>
+      {% else %}<div style="font-size:13px;color:#6b6b6b">No discount found.</div>{% endif %}
+    {% endfor %}
+  </td></tr>
+
+  <tr><td style="padding:24px 28px 0;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">E · COUNTRY COMPARISON</div>
+    {% if countries %}
+    {% if best_country %}<p style="font-size:14px;color:#27272a">Best overall: <b>{{ FLAGS.get(best_country.country,'') }} {{ COUNTRY_NAMES.get(best_country.country) }}</b> — {{ best_country.discounted }} discounted products, average {{ best_country.avg_discount }}% off.</p>{% endif %}
+    <table role="presentation" width="100%" cellpadding="6" cellspacing="0" style="font-size:13px;border-collapse:collapse">
+      <tr style="background:#fafafa;color:#6b6b6b;text-align:left"><th align="left">Country</th><th align="right">Discounted</th><th align="right">30%+</th><th align="right">Avg off</th><th align="right">Max off</th><th align="right">Cheapest for</th></tr>
+      {% for c in countries %}
+      <tr style="border-top:1px solid #f0f0f0"><td>{{ FLAGS.get(c.country,'') }} {{ c.country }}</td><td align="right">{{ c.discounted }}</td><td align="right">{{ c.strong_deals }}</td><td align="right">{{ c.avg_discount }}%</td><td align="right">{{ '%.0f' % c.max_discount }}%</td><td align="right">{{ c.cheapest_wins }} SKUs</td></tr>
+      {% endfor %}
+    </table>
+    <p style="font-size:11px;color:#8a8a8a">PLN prices converted to EUR at the ECB reference rate. Zalando country shops generally deliver only within that country; shipping costs are not included.</p>
+    {% else %}<p style="font-size:14px;color:#27272a">No country data available.</p>{% endif %}
+  </td></tr>
+
+  <tr><td style="padding:24px 28px 0;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">F · PRICE DROPS SINCE LAST SCAN</div>
+    {% if drops %}
+    <table role="presentation" width="100%" cellpadding="6" cellspacing="0" style="font-size:13px;border-collapse:collapse">
+      {% for d in drops %}
+      <tr style="border-top:1px solid #f0f0f0">
+        <td><a href="{{ d.url }}" style="color:#0a0a0a;font-weight:600">{{ d.model or d.name }}</a><br><span style="color:#6b6b6b">{{ d.colourway }} · {{ d.country }}</span></td>
+        <td align="right" style="white-space:nowrap"><span style="color:#8a8a8a;text-decoration:line-through">{{ d.drop_from_eur | money }}</span> → <b>{{ d.price_eur | money }}</b><br><span style="color:#16a34a">-{{ d.drop_eur | money }}</span></td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% elif baseline %}<p style="font-size:14px;color:#27272a">Price drops will appear from the second scan onwards.</p>
+    {% else %}<p style="font-size:14px;color:#27272a">No price decreases since the previous scan.</p>{% endif %}
+  </td></tr>
+
+  <tr><td style="padding:24px 28px 8px;font-family:Helvetica,Arial,sans-serif">
+    <div style="font-size:12px;font-weight:700;color:#6b6b6b;letter-spacing:.08em">G · WATCHLIST ALERTS</div>
+    {% if watch %}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      {% for m in watch %}
+      <tr><td colspan="2" style="padding-top:10px;font-size:12px;color:#f97316;font-weight:600">★ {{ m.rule }}</td></tr>
+      {{ deal(m.deal) }}
+      {% endfor %}
+    </table>
+    {% elif watch_rules %}<p style="font-size:14px;color:#27272a">None of your {{ watch_rules|length }} watchlist rules was triggered this week.</p>
+    {% else %}<p style="font-size:14px;color:#27272a">Your watchlist is empty. <a href="{{ app_url }}/watchlist" style="color:#0a0a0a">Add rules</a>.</p>{% endif %}
+  </td></tr>
+
+  <tr><td style="padding:24px 28px 28px;font-family:Helvetica,Arial,sans-serif;border-top:1px solid #f0f0f0">
+    <a href="{{ app_url }}/deals" style="display:inline-block;background:#0a0a0a;color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 18px;border-radius:10px">Open all deals</a>
+    <p style="font-size:11px;color:#8a8a8a;margin-top:16px">Prices are exactly as shown on Zalando at scan time and can change at any moment. Original prices are the shop's own crossed-out prices. Nike Deal Tracker is a personal tool and is not affiliated with Nike or Zalando.</p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>

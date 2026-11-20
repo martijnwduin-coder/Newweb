@@ -25,12 +25,14 @@
     <div style="font-size:12px;color:#6b6b6b;text-transform:uppercase;letter-spacing:.04em">
       {% if rank %}#{{ rank }} · {% endif %}{{ r.franchise.name if r.franchise else (r.subcategory or r.category)|title }} · {{ FLAGS.get(r.country,'') }} {{ r.country }}
       {%- if r.watched %} · <span style="color:#f97316">★ watchlist</span>{% endif %}
-      {%- if r.is_cheapest %} · <span style="color:#16a34a">cheapest of {{ r.country_count }} countries</span>{% endif %}
+      {%- if r.is_cheapest and (r.savings_vs_highest_eur or 0) > 0 %} · <span style="color:#16a34a">cheapest of {{ r.country_count }} countries</span>{% endif %}
     </div>
     <div style="font-size:15px;font-weight:600;color:#0a0a0a;margin:2px 0">{{ r.model or r.name }}</div>
     <div style="font-size:13px;color:#3f3f46">{{ r.colourway or '' }}</div>
     <div style="margin:6px 0">{{ badge(r) }} &nbsp;{{ price(r) }}</div>
     <div style="font-size:12px;color:#6b6b6b">Sizes: {{ r.sizes | join(', ') if r.sizes else 'not listed' }}</div>
+    {%- if r.also_in %}<div style="font-size:12px;color:#6b6b6b">Also in: {% for o in r.also_in %}{{ o.country }} {{ o.price_eur | money }}{% if o.discount_pct %} (-{{ '%.0f' % o.discount_pct }}%){% endif %}{% if not loop.last %} · {% endif %}{% endfor %}</div>{% endif %}
+    {%- if r.prior_low_price %}<div style="font-size:12px;color:#6b6b6b">Lowest price of the previous 30 days: {{ r.prior_low_price | money(r.currency) }} (-{{ '%.0f' % r.discount_vs_prior_low_pct }}% vs that)</div>{% endif %}
     <div style="margin-top:6px"><a href="{{ r.url }}" style="color:#0a0a0a;font-weight:600;font-size:13px">View on Zalando {{ r.country }} →</a></div>
   </td>
 </tr>
@@ -62,7 +64,7 @@
       </tr>
     </table>
     {% if overview.best %}
-    <p style="font-size:14px;color:#27272a;margin:14px 0 0">Best discount of the week: <b>{{ overview.best.model or overview.best.name }}</b> ({{ overview.best.colourway }}) — <b>-{{ '%.0f' % overview.best.discount_pct }}%</b> in {{ COUNTRY_NAMES.get(overview.best.country) }} at {{ overview.best.price | money(overview.best.currency) }}.</p>
+    <p style="font-size:14px;color:#27272a;margin:14px 0 0">Best discount of the week: <b>{{ overview.best.model or overview.best.name }}</b> {% if overview.best.colourway %}({{ overview.best.colourway }}){% endif %} — <b>-{{ '%.0f' % overview.best.discount_pct }}%</b> in {{ COUNTRY_NAMES.get(overview.best.country) }} at {{ overview.best.price | money(overview.best.currency) }}.</p>
     {% endif %}
     {% if baseline %}<p style="font-size:12px;color:#6b6b6b;margin:10px 0 0">This is a baseline scan: price drops and "new deal" detection start from the next scan.</p>{% endif %}
     {% if scan_results %}
@@ -117,7 +119,7 @@
     <table role="presentation" width="100%" cellpadding="6" cellspacing="0" style="font-size:13px;border-collapse:collapse">
       {% for d in drops %}
       <tr style="border-top:1px solid #f0f0f0">
-        <td><a href="{{ d.url }}" style="color:#0a0a0a;font-weight:600">{{ d.model or d.name }}</a><br><span style="color:#6b6b6b">{{ d.colourway }} · {{ d.country }}</span></td>
+        <td><a href="{{ d.url }}" style="color:#0a0a0a;font-weight:600">{{ d.model or d.name }}</a><br><span style="color:#6b6b6b">{{ d.colourway or '' }} · {{ d.country }}</span></td>
         <td align="right" style="white-space:nowrap"><span style="color:#8a8a8a;text-decoration:line-through">{{ d.drop_from_eur | money }}</span> → <b>{{ d.price_eur | money }}</b><br><span style="color:#16a34a">-{{ d.drop_eur | money }}</span></td>
       </tr>
       {% endfor %}

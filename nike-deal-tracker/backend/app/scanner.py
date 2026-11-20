@@ -391,3 +391,20 @@ def run_scan(db: Session, **kwargs) -> ScanSession:
     ctor_keys = {"settings", "connector_factory", "fx", "now"}
     scanner = Scanner(db, **{k: v for k, v in kwargs.items() if k in ctor_keys})
     return scanner.run(**{k: v for k, v in kwargs.items() if k not in ctor_keys})
+
+
+def reclassify_all(db: Session) -> int:
+    """Re-run identification on stored products (after classifier or franchise changes)."""
+    pool, by_slug = franchise_pool(db)
+    changed = 0
+    for p in db.scalars(select(Product)):
+        c = classify(p.name, pool=pool)
+        fid = by_slug[c.franchise_slug].id if c.franchise_slug in by_slug else None
+        new = {"franchise_id": fid, "category": c.category, "subcategory": c.subcategory, "model": c.model,
+               "colourway": c.colourway or p.colourway, "gender": c.gender if c.gender != "unisex" else p.gender}
+        if any(getattr(p, k) != v for k, v in new.items()):
+            for k, v in new.items():
+                setattr(p, k, v)
+            changed += 1
+    db.commit()
+    return changed

@@ -36,6 +36,20 @@ _env.globals["FLAGS"] = FLAGS
 _env.globals["COUNTRY_NAMES"] = COUNTRY_NAMES
 
 
+def best_per_product(rows: list[dict], key: str = "score") -> list[dict]:
+    """One entry per SKU: the best country by ``key``; the other countries are listed in ``also_in``."""
+    by: dict[int, list[dict]] = {}
+    for r in rows:
+        by.setdefault(r["product_id"], []).append(r)
+    out = []
+    for rs in by.values():
+        rs = sort_rows(rs, key)
+        best = dict(rs[0])
+        best["also_in"] = [{"country": o["country"], "price_eur": o["price_eur"], "discount_pct": o["discount_pct"]} for o in rs[1:]]
+        out.append(best)
+    return sort_rows(out, key)
+
+
 def build_context(db: Session, scan: ScanSession | None = None, *, now: datetime | None = None) -> dict:
     st = schedule_settings(db)
     tz = st.timezone if st else "Europe/Amsterdam"
@@ -52,13 +66,13 @@ def build_context(db: Session, scan: ScanSession | None = None, *, now: datetime
     for r in all_rows:
         r["watched"] = r["variant_id"] in watched
 
-    top = sort_rows([r for r in disc if r["discount_pct"] >= min_disc], "score")[:20]
-    af1 = sort_rows([r for r in disc if r["franchise"] and r["franchise"]["slug"] == "air-force-1"], "discount")[:15]
+    top = best_per_product([r for r in disc if r["discount_pct"] >= min_disc], "score")[:20]
+    af1 = best_per_product([r for r in disc if r["franchise"] and r["franchise"]["slug"] == "air-force-1"], "discount")[:15]
     priority = []
     for f in FRANCHISES:
         if f.priority != 1 or f.slug == "air-force-1":
             continue
-        deals = sort_rows([r for r in disc if r["franchise"] and r["franchise"]["slug"] == f.slug], "discount")[:3]
+        deals = best_per_product([r for r in disc if r["franchise"] and r["franchise"]["slug"] == f.slug], "discount")[:3]
         priority.append({"slug": f.slug, "name": f.name, "deals": deals})
 
     drops = []

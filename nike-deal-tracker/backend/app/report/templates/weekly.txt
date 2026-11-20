@@ -5,29 +5,29 @@
 {% endif %}
 A. WEEKLY OVERVIEW
 Products monitored: {{ overview.monitored }} | Discounted: {{ overview.discounted }} | New deals: {{ overview.new_deals }} | 30%+: {{ overview.strong }}
-{% if overview.best %}Best discount: {{ overview.best.model or overview.best.name }} ({{ overview.best.colourway }}) -{{ '%.0f' % overview.best.discount_pct }}% in {{ overview.best.country }} at {{ overview.best.price | money(overview.best.currency) }}
+{% if overview.best %}Best discount: {{ overview.best.model or overview.best.name }} {% if overview.best.colourway %}({{ overview.best.colourway }}){% endif %} -{{ '%.0f' % overview.best.discount_pct }}% in {{ overview.best.country }} at {{ overview.best.price | money(overview.best.currency) }}
 {% endif %}
 B. TOP DEALS
-{% for r in top %}{{ loop.index }}. {{ r.model or r.name }} | {{ r.colourway }} | {{ r.country }} | {{ r.price | money(r.currency) }} (was {{ r.original_price | money(r.currency) }}) -{{ '%.0f' % r.discount_pct }}%{% if r.watched %} [watchlist]{% endif %}
+{% for r in top %}{{ loop.index }}. {{ r.model or r.name }} | {{ r.colourway or '' }} | {{ r.country }} | {{ r.price | money(r.currency) }} (was {{ r.original_price | money(r.currency) }}) -{{ '%.0f' % r.discount_pct }}%{% if r.watched %} [watchlist]{% endif %}
    Sizes: {{ r.sizes | join(', ') if r.sizes else 'n/a' }} | {{ r.url }}
 {% else %}No significant deals this week (nothing reached {{ min_discount }}% off).
 {% endfor %}
 C. AIR FORCE 1
-{% for r in af1 %}- {{ r.model }} {{ r.colourway }} | {{ r.country }} | {{ r.price | money(r.currency) }} -{{ '%.0f' % r.discount_pct }}% | {{ r.url }}
+{% for r in af1 %}- {{ r.model }} {{ r.colourway or '' }} | {{ r.country }} | {{ r.price | money(r.currency) }} -{{ '%.0f' % r.discount_pct }}% | {{ r.url }}
 {% else %}No discounted Air Force 1 this week.
 {% endfor %}
 D. PRIORITY FRANCHISES
-{% for f in priority %}{{ f.name }}: {% if f.deals %}{% for r in f.deals %}{{ r.colourway }} {{ r.country }} {{ r.price | money(r.currency) }} -{{ '%.0f' % r.discount_pct }}%{% if not loop.last %}; {% endif %}{% endfor %}{% else %}no discount{% endif %}
+{% for f in priority %}{{ f.name }}: {% if f.deals %}{% for r in f.deals %}{{ r.colourway or '' }} {{ r.country }} {{ r.price | money(r.currency) }} -{{ '%.0f' % r.discount_pct }}%{% if not loop.last %}; {% endif %}{% endfor %}{% else %}no discount{% endif %}
 {% endfor %}
 E. COUNTRY COMPARISON
 {% for c in countries %}{{ c.country }}: {{ c.discounted }} discounted, avg {{ c.avg_discount }}%, max {{ '%.0f' % c.max_discount }}%
 {% endfor %}
 F. PRICE DROPS
-{% for d in drops %}- {{ d.model }} {{ d.colourway }} {{ d.country }}: {{ d.drop_from_eur | money }} -> {{ d.price_eur | money }}
+{% for d in drops %}- {{ d.model }} {{ d.colourway or '' }} {{ d.country }}: {{ d.drop_from_eur | money }} -> {{ d.price_eur | money }}
 {% else %}{{ 'Starts from the second scan.' if baseline else 'No price decreases since the previous scan.' }}
 {% endfor %}
 G. WATCHLIST ALERTS
-{% for m in watch %}- [{{ m.rule }}] {{ m.deal.model }} {{ m.deal.colourway }} {{ m.deal.country }} {{ m.deal.price | money(m.deal.currency) }} -{{ '%.0f' % m.deal.discount_pct }}% {{ m.deal.url }}
+{% for m in watch %}- [{{ m.rule }}] {{ m.deal.model }} {{ m.deal.colourway or '' }} {{ m.deal.country }} {{ m.deal.price | money(m.deal.currency) }} -{{ '%.0f' % m.deal.discount_pct }}% {{ m.deal.url }}
 {% else %}No watchlist alerts.
 {% endfor %}
 Dashboard: {{ app_url }}

@@ -292,20 +292,10 @@ def patch_franchise(fid: int, body: FranchisePatch, db: Session = Depends(get_db
 
 @api.post("/franchises/reclassify")
 def reclassify(db: Session = Depends(get_db)) -> dict:
-    """Re-run franchise matching on stored products (after adding a franchise)."""
-    from ..catalog.classifier import classify
-    from ..scanner import franchise_pool
+    """Re-run identification on stored products (after adding a franchise)."""
+    from ..scanner import reclassify_all
 
-    pool, by_slug = franchise_pool(db)
-    changed = 0
-    for p in db.scalars(select(Product)):
-        c = classify(p.name, colour=p.colourway, pool=pool)
-        fid = by_slug[c.franchise_slug].id if c.franchise_slug in by_slug else None
-        if p.category == "footwear" and fid != p.franchise_id:
-            p.franchise_id = fid
-            changed += 1
-    db.commit()
-    return {"changed": changed}
+    return {"changed": reclassify_all(db)}
 
 
 @api.get("/countries")

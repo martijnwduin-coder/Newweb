@@ -183,6 +183,12 @@ def cmd_purge_sample(_):
     print(f"removed {n} sample products and {m} sample scans")
 
 
+def cmd_reclassify(_):
+    from .scanner import reclassify_all
+
+    print(f"re-classified {reclassify_all(_db())} products")
+
+
 def cmd_create_user(args):
     from .seed import create_user
 
@@ -226,6 +232,7 @@ def main(argv: list[str] | None = None) -> int:
     ss.add_argument("--weeks", type=int, default=6)
     ss.set_defaults(fn=cmd_seed_sample)
     sub.add_parser("purge-sample").set_defaults(fn=cmd_purge_sample)
+    sub.add_parser("reclassify").set_defaults(fn=cmd_reclassify)
     cu = sub.add_parser("create-user")
     cu.add_argument("email")
     cu.add_argument("--password")

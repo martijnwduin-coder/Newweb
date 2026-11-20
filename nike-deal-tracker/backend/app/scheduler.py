@@ -59,14 +59,15 @@ def is_due(db: Session, now: datetime | None = None) -> tuple[bool, str, str | N
     moment = scheduled_moment(now, wd, h, m, tz)
     key = week_key(moment, tz)
     if now - moment > CATCH_UP_WINDOW:
-        return False, f"outside window (last slot {moment.isoformat()}, next {next_run(now, wd, h, m, tz).isoformat()})", key
+        nxt = next_run(now, wd, h, m, tz).astimezone(ZoneInfo(tz))
+        return False, f"Not due now. Next weekly run: {nxt:%a %d %b %H:%M} ({tz}).", key
     done = db.scalar(select(ScanSession).where(ScanSession.week_key == key, ScanSession.trigger == "schedule", ScanSession.status != "failed").limit(1))
     if done:
-        return False, f"weekly scan for {key} already ran (scan #{done.id}, {done.status})", key
+        return False, f"This week's scan ({key}) already ran: scan #{done.id}, {done.status}.", key
     failed = list(db.scalars(select(ScanSession).where(ScanSession.week_key == key, ScanSession.trigger == "schedule")))
     if len(failed) >= 3:
         return False, f"weekly scan for {key} failed 3 times; not retrying automatically", key
-    return True, f"due: slot {moment.isoformat()} ({key})", key
+    return True, f"Due: {moment.astimezone(ZoneInfo(tz)):%a %d %b %H:%M} slot ({key}).", key
 
 
 def run_weekly_job(db: Session, *, trigger: str = "schedule", week_key: str | None = None, send_email: bool = True) -> dict:

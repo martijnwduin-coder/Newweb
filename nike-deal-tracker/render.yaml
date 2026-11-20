@@ -1,0 +1,43 @@
+# Render Blueprint for the API (free plan). Frontend: Vercel. Database: Supabase or Neon (free).
+# The weekly scan runs in GitHub Actions, so it does not matter that free Render services sleep.
+# Note: Render reads blueprints from the repository root; copy this file there if you use it.
+services:
+  - type: web
+    name: nike-deal-tracker-api
+    runtime: docker
+    rootDir: nike-deal-tracker/backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: CRON_TOKEN
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: PUBLIC_APP_URL
+        sync: false
+      - key: EMAIL_PROVIDER
+        value: resend
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: REPORT_RECIPIENT
+        sync: false
+      - key: SCAN_EXECUTOR
+        value: github
+      - key: GITHUB_REPOSITORY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: GITHUB_REF
+        value: main

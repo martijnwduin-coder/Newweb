@@ -230,6 +230,8 @@ def strip_brand(text: str) -> str:
     t = text.strip()
     low = t.lower()
     for b in BRAND_PREFIXES:
+        if low == b:
+            return ""
         if low.startswith(b + " "):
             return t[len(b) + 1:].strip()
     return t
@@ -245,6 +247,10 @@ def classify(
     pool: CompiledPool | None = None,
 ) -> Classification:
     model_part, type_part, colour_part = split_zalando_name(name)
+    # "Shorts - sanddrift": no model, the first part is the product type and the second the colour
+    if colour_part is None and type_part is not None:
+        if classify_category(strip_brand(model_part))[0] != "other" and classify_category(type_part)[0] == "other" and not match_franchise(strip_brand(model_part), pool):
+            model_part, type_part, colour_part = model_part, model_part, type_part
     category, sub = classify_category(type_part or name, category_hint)
     if category == "other" and type_part:
         category, sub = classify_category(name, category_hint)
@@ -255,7 +261,7 @@ def classify(
     if category != "footwear":
         franchise = None
     gender = classify_gender(gender_hint, url_gender(url), strip_brand(model_part), name)
-    model = strip_brand(model_part) if model_part else None
+    model = (strip_brand(model_part) or None) if model_part else None
     colourway = (colour or colour_part or None)
     if colourway:
         colourway = colourway.strip().strip("-").strip() or None

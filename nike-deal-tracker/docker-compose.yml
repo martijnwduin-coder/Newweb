@@ -1,0 +1,50 @@
+# Self-hosted, always-on deployment (home server, NAS, Raspberry Pi, VPS):
+#   cp .env.example .env      # fill in secrets
+#   docker compose up -d --build
+# The backend runs the weekly schedule itself (RUN_INPROCESS_SCHEDULER=true), so GitHub
+# Actions are not needed in this setup.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: nike
+      POSTGRES_USER: nike
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nike"]
+      interval: 5s
+      retries: 20
+
+  backup:
+    # Nightly pg_dump into ./backups (one file per day). Prune old files yourself or with a host cron.
+    image: postgres:16-alpine
+    restart: unless-stopped
+    depends_on: { db: { condition: service_healthy } }
+    environment: { PGPASSWORD: "${POSTGRES_PASSWORD}" }
+    volumes: ["./backups:/backups"]
+    entrypoint: ["/bin/sh", "-c", "while true; do pg_dump -h db -U nike nike | gzip > /backups/nike-$$(date +%F).sql.gz; sleep 86400; done"]
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on: { db: { condition: service_healthy } }
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://nike:${POSTGRES_PASSWORD}@db:5432/nike
+      RUN_INPROCESS_SCHEDULER: "true"
+      ENVIRONMENT: production
+    ports: ["127.0.0.1:8000:8000"]
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on: [backend]
+    environment:
+      BACKEND_URL: http://backend:8000
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    ports: ["3000:3000"]
+
+volumes:
+  pgdata:

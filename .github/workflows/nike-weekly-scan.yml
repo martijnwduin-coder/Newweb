@@ -1,0 +1,85 @@
+# Nike Deal Tracker — weekly Zalando scan + Monday report.
+#
+# GitHub cron runs in UTC and can start late, so the workflow wakes up every hour on
+# Monday morning and `python -m app.cli tick` decides whether the scan is due, using the
+# schedule saved in the dashboard (default Monday 08:00 Europe/Amsterdam, DST-aware).
+# The tick is idempotent: the weekly job runs at most once per ISO week.
+name: Nike weekly scan
+
+on:
+  schedule:
+    - cron: "7 4-10 * * 1" # Mondays 04:07–10:07 UTC = 05:07–12:07 Amsterdam (covers CET and CEST)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "tick = run only if due · scan = scan now · scan-and-report = scan + email · report = email only"
+        type: choice
+        options: [tick, scan, scan-and-report, report]
+        default: scan-and-report
+      countries:
+        description: "Comma-separated country codes (empty = all five), only for mode=scan"
+        required: false
+        default: ""
+
+concurrency:
+  group: nike-deal-tracker-scan
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    defaults:
+      run:
+        working-directory: nike-deal-tracker/backend
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      EMAIL_PROVIDER: ${{ vars.EMAIL_PROVIDER || 'resend' }}
+      EMAIL_FROM: ${{ vars.EMAIL_FROM }}
+      REPORT_RECIPIENT: ${{ vars.REPORT_RECIPIENT }}
+      PUBLIC_APP_URL: ${{ vars.PUBLIC_APP_URL }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      SMTP_HOST: ${{ vars.SMTP_HOST }}
+      SMTP_PORT: ${{ vars.SMTP_PORT || '587' }}
+      SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      CONNECTOR_NL: ${{ vars.CONNECTOR_NL || 'zalando_web' }}
+      CONNECTOR_DE: ${{ vars.CONNECTOR_DE || 'zalando_web' }}
+      CONNECTOR_FR: ${{ vars.CONNECTOR_FR || 'zalando_web' }}
+      CONNECTOR_ES: ${{ vars.CONNECTOR_ES || 'zalando_web' }}
+      CONNECTOR_PL: ${{ vars.CONNECTOR_PL || 'zalando_web' }}
+      FEED_URL_NL: ${{ secrets.FEED_URL_NL }}
+      FEED_URL_DE: ${{ secrets.FEED_URL_DE }}
+      FEED_URL_FR: ${{ secrets.FEED_URL_FR }}
+      FEED_URL_ES: ${{ secrets.FEED_URL_ES }}
+      FEED_URL_PL: ${{ secrets.FEED_URL_PL }}
+      LOG_JSON: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: nike-deal-tracker/backend/requirements.txt
+      - name: Check configuration
+        run: |
+          if [ -z "$DATABASE_URL" ]; then echo "::error::Repository secret DATABASE_URL is not set"; exit 1; fi
+      - run: pip install -r requirements.txt
+      - name: Scheduler tick
+        if: github.event_name == 'schedule' || inputs.mode == 'tick'
+        run: python -m app.cli tick
+      - name: Scan now
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'scan'
+        run: |
+          ARGS=""
+          for c in $(echo "${{ inputs.countries }}" | tr ',' ' '); do ARGS="$ARGS --country $c"; done
+          python -m app.cli scan $ARGS
+      - name: Scan and email report
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'scan-and-report'
+        run: python -m app.cli weekly
+      - name: Email report only
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'report'
+        run: python -m app.cli report --send

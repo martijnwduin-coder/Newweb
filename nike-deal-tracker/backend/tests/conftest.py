@@ -12,7 +12,8 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 @pytest.fixture(autouse=True)
 def _env(tmp_path, monkeypatch):
-    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{tmp_path}/test.db")
+    # TEST_DATABASE_URL=postgresql://... runs the suite against PostgreSQL (schema recreated per test)
+    monkeypatch.setenv("DATABASE_URL", os.environ.get("TEST_DATABASE_URL") or f"sqlite:///{tmp_path}/test.db")
     monkeypatch.setenv("HTTP_CACHE_DIR", str(tmp_path / "cache"))
     monkeypatch.setenv("ADMIN_EMAIL", "me@example.com")
     monkeypatch.setenv("ADMIN_PASSWORD", "correct-horse-battery")
@@ -35,9 +36,13 @@ def _env(tmp_path, monkeypatch):
 
 @pytest.fixture
 def session():
-    from app.db import SessionLocal, init_db
+    from app.db import Base, SessionLocal, get_engine, init_db
     from app.seed import bootstrap
 
+    if os.environ.get("TEST_DATABASE_URL"):
+        from app import models  # noqa: F401
+
+        Base.metadata.drop_all(get_engine())
     init_db()
     s = SessionLocal()
     bootstrap(s)
